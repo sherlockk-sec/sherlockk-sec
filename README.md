@@ -24,21 +24,20 @@
 <br/>
 
 <div align="left">
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=linux,ubuntu,windows,docker,python,bash,js,html,css" />
-  </a>
-</div>
-
-<div align="left" style="margin-top: 10px;">
-    <!-- Badges for specific security tools that don't have skillicons natively -->
-    <img src="https://img.shields.io/badge/Burp_Suite-FF6633?style=for-the-badge&logo=burpsuite&logoColor=white" height="35" />
-    <img src="https://img.shields.io/badge/Metasploit-2196F3?style=for-the-badge&logo=metasploit&logoColor=white" height="35" />
-    <img src="https://img.shields.io/badge/Nmap-000000?style=for-the-badge&logo=nmap&logoColor=white" height="35" />
-    <img src="https://img.shields.io/badge/Nessus-2B3A42?style=for-the-badge&logo=nessus&logoColor=00B1E1" height="35" />
-    <img src="https://img.shields.io/badge/Wazuh-00A9E5?style=for-the-badge&logo=wazuh&logoColor=white" height="35" />
-    <img src="https://img.shields.io/badge/Splunk-000000?style=for-the-badge&logo=splunk&logoColor=45B649" height="35" />
-    <img src="https://img.shields.io/badge/Proxmox_VE-E57000?style=for-the-badge&logo=proxmox&logoColor=white" height="35" />
-    <img src="https://img.shields.io/badge/Tailscale-4A4A4A?style=for-the-badge&logo=tailscale&logoColor=white" height="35" />
+    <!-- Main skillicons -->
+    <a href="https://skillicons.dev">
+        <img src="https://skillicons.dev/icons?i=linux,ubuntu,windows,docker,python,bash,js,html,css" />
+    </a>
+    
+    <!-- Pure Security Symbols using simple-icons mapping -->
+    <img src="https://cdn.simpleicons.org/burpsuite/FF6633" height="48" style="margin-left: 5px; margin-right: 5px;" />
+    <img src="https://cdn.simpleicons.org/metasploit/2196F3" height="48" style="margin-left: 5px; margin-right: 5px;" />
+    <img src="https://cdn.simpleicons.org/nmap/000000" height="48" style="margin-left: 5px; margin-right: 5px;" />
+    <img src="https://cdn.simpleicons.org/nessus/00B1E1" height="48" style="margin-left: 5px; margin-right: 5px;" />
+    <img src="https://cdn.simpleicons.org/wazuh/00A9E5" height="48" style="margin-left: 5px; margin-right: 5px;" />
+    <img src="https://cdn.simpleicons.org/splunk/45B649" height="48" style="margin-left: 5px; margin-right: 5px;" />
+    <img src="https://cdn.simpleicons.org/proxmox/E57000" height="48" style="margin-left: 5px; margin-right: 5px;" />
+    <img src="https://cdn.simpleicons.org/tailscale/white" height="48" style="margin-left: 5px; margin-right: 5px;" />
 </div>
 
 <br/>
