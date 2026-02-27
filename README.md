@@ -60,8 +60,8 @@
 
 <br/>
 
-<img src="https://github-readme-stats.vercel.app/api?username=sherlockk-sec&show_icons=true&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true&include_all_commits=true" height="190" alt="GitHub Stats" />
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=sherlockk-sec&layout=compact&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true" height="190" alt="Top Languages" />
+<img src="https://github-readme-stats-eight-theta.vercel.app/api?username=sherlockk-sec&show_icons=true&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true&include_all_commits=true" height="190" alt="GitHub Stats" />
+<img src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sherlockk-sec&layout=compact&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true" height="190" alt="Top Languages" />
 
 </div>
 
