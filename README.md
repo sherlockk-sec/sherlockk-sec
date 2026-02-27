@@ -20,9 +20,11 @@
 
 <br/>
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=500&height=40&lines=Arsenal+%26+Technologies&repeat=false" alt="Arsenal & Technologies" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=20&duration=2000&color=00e5ff&center=false&vCenter=true&width=500&height=40&lines=Arsenal+%26+Technologies&repeat=false" alt="Arsenal & Technologies" />
 
 <br/>
+
+<div align="center">
 
 <table style="border: none; background-color: transparent;">
   <tr style="border: none;">
@@ -49,17 +51,19 @@
   </tr>
 </table>
 
+</div>
+
 <br/>
 
 ---
 
 <br/>
 
-<div align="left">
-
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=500&height=40&lines=Telemetry+Data&repeat=false" alt="Telemetry Data" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=20&duration=2000&color=00e5ff&center=false&vCenter=true&width=500&height=40&lines=Telemetry+Data&repeat=false" alt="Telemetry Data" />
 
 <br/>
+
+<div align="center">
 
 <img src="https://github-readme-stats-eight-theta.vercel.app/api?username=sherlockk-sec&show_icons=true&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true&include_all_commits=true" height="190" alt="GitHub Stats" />
 <img src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=sherlockk-sec&layout=compact&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true" height="190" alt="Top Languages" />
@@ -72,9 +76,11 @@
 
 <br/>
 
-<div align="left">
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=20&duration=2000&color=00e5ff&center=false&vCenter=true&width=500&height=40&lines=Activity+Matrix&repeat=false" alt="Activity Matrix" />
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=500&height=40&lines=Activity+Matrix&repeat=false" alt="Activity Matrix" />
+<br/>
+
+<div align="center">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/sherlockk-sec/sherlockk-sec/output/github-contribution-grid-snake-dark.svg">
@@ -88,11 +94,11 @@
 
 ---
 
-<div align="left">
-
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=500&height=40&lines=Connect+With+Me&repeat=false" alt="Connect With Me" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=20&duration=2000&color=00e5ff&center=false&vCenter=true&width=500&height=40&lines=Connect+With+Me&repeat=false" alt="Connect With Me" />
 
 <br/>
+
+<div align="center">
 
 <a href="https://sherlockk.space/">
   <img src="https://img.icons8.com/fluency/35/domain.png" alt="Portfolio" />
