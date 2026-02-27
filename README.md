@@ -24,20 +24,20 @@
 <br/>
 
 <div align="left">
-    <!-- Main skillicons -->
-    <a href="https://skillicons.dev">
-        <img src="https://skillicons.dev/icons?i=linux,ubuntu,windows,docker,python,bash,js,html,css" />
-    </a>
-    
-    <!-- Pure Security Symbols using simple-icons mapping -->
-    <img src="https://cdn.simpleicons.org/burpsuite/FF6633" height="48" style="margin-left: 5px; margin-right: 5px;" />
-    <img src="https://cdn.simpleicons.org/metasploit/2196F3" height="48" style="margin-left: 5px; margin-right: 5px;" />
-    <img src="https://cdn.simpleicons.org/nmap/000000" height="48" style="margin-left: 5px; margin-right: 5px;" />
-    <img src="https://cdn.simpleicons.org/nessus/00B1E1" height="48" style="margin-left: 5px; margin-right: 5px;" />
-    <img src="https://cdn.simpleicons.org/wazuh/00A9E5" height="48" style="margin-left: 5px; margin-right: 5px;" />
-    <img src="https://cdn.simpleicons.org/splunk/45B649" height="48" style="margin-left: 5px; margin-right: 5px;" />
-    <img src="https://cdn.simpleicons.org/proxmox/E57000" height="48" style="margin-left: 5px; margin-right: 5px;" />
-    <img src="https://cdn.simpleicons.org/tailscale/white" height="48" style="margin-left: 5px; margin-right: 5px;" />
+  <!-- Main skillicons -->
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=linux,ubuntu,windows,docker,python,bash,js,html,css" />
+  </a>
+  
+  <!-- Pure Security Symbols using simple-icons mapping -->
+  <img src="https://cdn.simpleicons.org/burpsuite/FF6633" height="48" style="margin-left: 5px; margin-right: 5px;" />
+  <img src="https://cdn.simpleicons.org/metasploit/2196F3" height="48" style="margin-left: 5px; margin-right: 5px;" />
+  <img src="https://cdn.simpleicons.org/nmap/000000" height="48" style="margin-left: 5px; margin-right: 5px;" />
+  <img src="https://cdn.simpleicons.org/nessus/00B1E1" height="48" style="margin-left: 5px; margin-right: 5px;" />
+  <img src="https://cdn.simpleicons.org/wazuh/00A9E5" height="48" style="margin-left: 5px; margin-right: 5px;" />
+  <img src="https://cdn.simpleicons.org/splunk/45B649" height="48" style="margin-left: 5px; margin-right: 5px;" />
+  <img src="https://cdn.simpleicons.org/proxmox/E57000" height="48" style="margin-left: 5px; margin-right: 5px;" />
+  <img src="https://cdn.simpleicons.org/tailscale/white" height="48" style="margin-left: 5px; margin-right: 5px;" />
 </div>
 
 <br/>
