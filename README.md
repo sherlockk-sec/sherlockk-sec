@@ -1,11 +1,10 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=1a1a2e&height=250&section=header&text=SEC_OPS_TERMINAL_v1&fontSize=60&fontColor=00E5FF&animation=fadeIn&fontAlign=50&desc=INITIATING_SEQUENCE...&descSize=20&descAlign=50&descAlignY=70" alt="Cyber Header" />
-
-<br/>
+# sherlockk-sec
+### Cybersecurity Researcher & SOC Analyst
 
 <a href="https://git.io/typing-svg">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=22&duration=3500&pause=1000&color=B000FF&center=true&vCenter=true&width=500&lines=Cybersecurity+Researcher;Certified+Ethical+Hacker+(CEH+v12);SOC+Analyst;Hunting+Anomalies+in+the+Void" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=20&duration=3500&pause=1000&color=2eb67d&center=true&vCenter=true&width=500&lines=Hunting+Anomalies+in+the+Void;Certified+Ethical+Hacker+(CEH+v12);Building+Secure+Infrastructure" alt="Typing SVG" />
 </a>
 
 <br/>
@@ -28,33 +27,31 @@
 <br/>
 
 **Offensive Operations**<br/>
-<img src="https://img.shields.io/badge/Burp_Suite-FF3366?style=for-the-badge&logo=burpsuite&logoColor=white" />
-<img src="https://img.shields.io/badge/Metasploit-FF3366?style=for-the-badge&logo=metasploit&logoColor=white" />
-<img src="https://img.shields.io/badge/Nmap-FF3366?style=for-the-badge&logo=nmap&logoColor=white" />
-<img src="https://img.shields.io/badge/Nessus-FF3366?style=for-the-badge&logo=nessus&logoColor=white" />
+<img src="https://img.shields.io/badge/Burp_Suite-FF6633?style=for-the-badge&logo=burpsuite&logoColor=white" />
+<img src="https://img.shields.io/badge/Metasploit-2196F3?style=for-the-badge&logo=metasploit&logoColor=white" />
+<img src="https://img.shields.io/badge/Nmap-000000?style=for-the-badge&logo=nmap&logoColor=white" />
+<img src="https://img.shields.io/badge/Nessus-2B3A42?style=for-the-badge&logo=nessus&logoColor=00B1E1" />
 
 <br/>
 
 **Defensive & SIEM**<br/>
-<img src="https://img.shields.io/badge/Wazuh-00E5FF?style=for-the-badge&logo=wazuh&logoColor=black" />
-<img src="https://img.shields.io/badge/Splunk-00E5FF?style=for-the-badge&logo=splunk&logoColor=white" />
-<img src="https://img.shields.io/badge/Fortinet-00E5FF?style=for-the-badge&logo=fortinet&logoColor=white" />
-<img src="https://img.shields.io/badge/Incident_Response-00E5FF?style=for-the-badge&logo=shield&logoColor=black" />
+<img src="https://img.shields.io/badge/Wazuh-00A9E5?style=for-the-badge&logo=wazuh&logoColor=white" />
+<img src="https://img.shields.io/badge/Splunk-000000?style=for-the-badge&logo=splunk&logoColor=45B649" />
+<img src="https://img.shields.io/badge/Fortinet-EE3124?style=for-the-badge&logo=fortinet&logoColor=white" />
+<img src="https://img.shields.io/badge/Incident_Response-272822?style=for-the-badge&logo=shield&logoColor=white" />
 
 <br/>
 
 **Scripting & Automation**<br/>
-<img src="https://img.shields.io/badge/Python-B000FF?style=for-the-badge&logo=python&logoColor=white" />
-<img src="https://img.shields.io/badge/Bash-B000FF?style=for-the-badge&logo=gnu-bash&logoColor=white" />
-<img src="https://img.shields.io/badge/n8n-B000FF?style=for-the-badge&logo=n8n&logoColor=white" />
+<img src="https://skillicons.dev/icons?i=python,bash" /><br/>
+<img src="https://img.shields.io/badge/n8n-FF6D5A?style=for-the-badge&logo=n8n&logoColor=white" />
 
 <br/>
 
 **Virtualization & Network**<br/>
-<img src="https://img.shields.io/badge/Proxmox_VE-1A1A2E?style=for-the-badge&logo=proxmox&logoColor=00E5FF" />
-<img src="https://img.shields.io/badge/Docker-1A1A2E?style=for-the-badge&logo=docker&logoColor=00E5FF" />
-<img src="https://img.shields.io/badge/Tailscale-1A1A2E?style=for-the-badge&logo=tailscale&logoColor=00E5FF" />
-<img src="https://img.shields.io/badge/Linux-1A1A2E?style=for-the-badge&logo=linux&logoColor=00E5FF" />
+<img src="https://skillicons.dev/icons?i=docker,linux,ubuntu" /><br/>
+<img src="https://img.shields.io/badge/Proxmox_VE-E57000?style=for-the-badge&logo=proxmox&logoColor=white" />
+<img src="https://img.shields.io/badge/Tailscale-4A4A4A?style=for-the-badge&logo=tailscale&logoColor=white" />
 
 </div>
 
@@ -70,10 +67,18 @@
 
 <br/>
 
-<img src="https://github-readme-stats.vercel.app/api?username=sherlockk-sec&show_icons=true&bg_color=1a1a2e&title_color=00E5FF&text_color=ffffff&icon_color=B000FF&hide_border=true&count_private=true&include_all_commits=true" height="190" alt="GitHub Stats" />
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=sherlockk-sec&layout=compact&bg_color=1a1a2e&title_color=00E5FF&text_color=ffffff&icon_color=B000FF&hide_border=true" height="190" alt="Top Languages" />
+<img src="https://github-readme-stats.vercel.app/api?username=sherlockk-sec&show_icons=true&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true&count_private=true&include_all_commits=true" height="190" alt="GitHub Stats" />
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=sherlockk-sec&layout=compact&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true" height="190" alt="Top Languages" />
 
-<br/><br/>
+</div>
+
+<br/>
+
+---
+
+<br/>
+
+<div align="center">
 
 ### 🕸️ Activity Matrix
 
@@ -96,13 +101,13 @@
 ### 🌐 Secure Communications
 
 <a href="https://sherlockk.space/">
-  <img src="https://img.shields.io/badge/Portfolio-00E5FF?style=for-the-badge&logo=web&logoColor=black" alt="Portfolio" />
+  <img src="https://img.shields.io/badge/Portfolio-2b3137?style=for-the-badge&logo=web&logoColor=white" alt="Portfolio" />
 </a>
 <a href="https://linkedin.com/in/yourprofile">
-  <img src="https://img.shields.io/badge/LinkedIn-B000FF?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+  <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
 </a>
 <a href="mailto:sherlockk.sec@gmail.com">
-  <img src="https://img.shields.io/badge/Email-1A1A2E?style=for-the-badge&logo=gmail&logoColor=00E5FF" alt="Email" />
+  <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
 </a>
 
 </div>
