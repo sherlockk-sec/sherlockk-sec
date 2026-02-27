@@ -10,11 +10,12 @@
 
 <br/>
 
-<img src="xmen-97-nightcrawler.gif" width="400" alt="Gambit Quote from X-Men 97" />
+<img src="xmen-97-nightcrawler.gif" width="400" alt="X-Men 97 Gambit Animation" />
 
 <br/>
+<br/>
 
-> *"It wasn't a Gamble, it was a Gambit."*
+<i style="color: #FF00FF;">"It wasn't a Gamble, it was a Gambit."</i>
 
 </div>
 
