@@ -1,7 +1,7 @@
 <div align="center">
 
-# sherlockk-sec
-### Cybersecurity Researcher & SOC Analyst
+# Karthikeyan S
+### Cybersecurity Researcher/Enthusiast
 
 <a href="https://git.io/typing-svg">
   <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=20&duration=3500&pause=1000&color=2eb67d&center=true&vCenter=true&width=500&lines=Hunting+Anomalies+in+the+Void;Certified+Ethical+Hacker+(CEH+v12);Building+Secure+Infrastructure" alt="Typing SVG" />
@@ -19,7 +19,7 @@
 
 <br/>
 
-### 🚀 Some Tools I Have Used and Learned
+### 🛠️ Arsenal & Technologies
 
 <br/>
 
@@ -44,7 +44,7 @@
     <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/splunk/45B649" height="48" /><br><sub>Splunk</sub></td>
     <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/proxmox/E57000" height="48" /><br><sub>Proxmox</sub></td>
     <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/tailscale/white" height="48" /><br><sub>Tailscale</sub></td>
-    <td align="center" style="border: none;"></td>
+    <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/apacheguacamole/83B81A" height="48" /><br><sub>Guacamole</sub></td>
   </tr>
 </table>
 
@@ -60,7 +60,7 @@
 
 <br/>
 
-<img src="https://github-readme-stats.vercel.app/api?username=sherlockk-sec&show_icons=true&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true&count_private=true&include_all_commits=true" height="190" alt="GitHub Stats" />
+<img src="https://github-readme-stats.vercel.app/api?username=sherlockk-sec&show_icons=true&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true&include_all_commits=true" height="190" alt="GitHub Stats" />
 <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=sherlockk-sec&layout=compact&bg_color=1F222E&title_color=2eb67d&text_color=ffffff&icon_color=2eb67d&hide_border=true" height="190" alt="Top Languages" />
 
 </div>
