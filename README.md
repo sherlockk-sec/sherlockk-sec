@@ -10,9 +10,7 @@
 
 <br/>
 
-<a href="https://tenor.com/view/xmen-97-nightcrawler-gambit-rogue-reunion-gif-11428689062549095397">
-  <img src="https://media1.tenor.com/m/nprAAAAC/xmen-97-nightcrawler.gif" width="400" alt="Gambit Quote from X-Men 97" />
-</a>
+<img src="xmen-97-nightcrawler.gif" width="400" alt="Gambit Quote from X-Men 97" />
 
 <br/>
 
