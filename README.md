@@ -1,144 +1,108 @@
 <div align="center">
 
-# 🕰️ 221B Baker Street
-## The Archives of sherlockk-sec
-*(You can replace the placeholder banner below with your own 221B Baker Street imagery)*
-
-<img src="https://via.placeholder.com/800x200/1a1a1a/d4af37?text=221B+Baker+Street+Banner" alt="221B Baker Street Banner" style="border: 1px solid #d4af37;" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=1a1a2e&height=250&section=header&text=SEC_OPS_TERMINAL_v1&fontSize=60&fontColor=00E5FF&animation=fadeIn&fontAlign=50&desc=INITIATING_SEQUENCE...&descSize=20&descAlign=50&descAlignY=70" alt="Cyber Header" />
 
 <br/>
 
-> *"Data! Data! Data! I cannot make bricks without clay!"* — Sherlock Holmes
+<a href="https://git.io/typing-svg">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=22&duration=3500&pause=1000&color=B000FF&center=true&vCenter=true&width=500&lines=Cybersecurity+Researcher;Certified+Ethical+Hacker+(CEH+v12);SOC+Analyst;Hunting+Anomalies+in+the+Void" alt="Typing SVG" />
+</a>
 
 <br/>
 
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Special+Elite&size=24&duration=4000&pause=1000&color=D4AF37&center=true&vCenter=true&width=600&lines=Consulting+Detective;Master+of+Algorithms;Solving+the+Web's+Mysteries;Cybersecurity+Researcher" alt="Typing SVG" /></a>
+> *"It wasn't a Gamble, it was a Gambit."*
 
 </div>
 
 <br/>
-<hr style="border: 1px solid #d4af37;" />
-<br/>
 
-### 🕵️‍♂️ About Me (The Detective's Profile)
-
-<table width="100%" style="border-collapse: collapse; border: none;">
-  <tr>
-    <td width="60%" style="border: none; vertical-align: top;">
-      <p><b>Currently investigating...</b> The intricate anomalies within the digital <i>Grey Fog</i> and building custom SOC defenses within my Proxmox sanctuary.</p>
-      <p><b>Recent deductions...</b> Architected a bare-metal virtualization cluster and successfully deployed a centralized Wazuh SIEM to trace unauthorized access footprints.</p>
-      <p><b>Collaborators found at...</b> The Cyber Security Operations Center (SOC) investigating real-world anomalies, safeguarding the realm against advanced persistent threats.</p>
-    </td>
-    <td width="40%" align="center" style="border: none; vertical-align: middle;">
-      <!-- Placeholder GIF for a Sherlock/Detective motif -->
-      <img src="https://media3.giphy.com/media/l41lOebZGGsqOtc2Y/giphy.webp" width="230" alt="Detective GIF" style="border: 2px solid #1a1a1a; border-radius: 5px;" />
-    </td>
-  </tr>
-</table>
+---
 
 <br/>
-<hr style="border: 1px solid #d4af37;" />
-<br/>
-
-### 🔍 Tools of the Trade
-
-<table width="100%" align="center">
-  <tr>
-    <td align="center" width="33%"><b>✒️ Forensic Tools</b><br/><i>(Languages & Scripting)</i></td>
-    <td align="center" width="33%"><b>🔎 Magnifying Glasses</b><br/><i>(Offensive & Defensive)</i></td>
-    <td align="center" width="33%"><b>📜 The Archives</b><br/><i>(Infrastructure & OS)</i></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <br/>
-      <img src="https://skillicons.dev/icons?i=python,bash,js,html" /><br/><br/>
-    </td>
-    <td align="center">
-      <br/>
-      <img src="https://img.shields.io/badge/-Burp_Suite-1a1a1a?style=for-the-badge&logo=burpsuite&logoColor=d4af37" /><br/>
-      <img src="https://img.shields.io/badge/-Metasploit-1a1a1a?style=for-the-badge&logo=metasploit&logoColor=d4af37" /><br/>
-      <img src="https://img.shields.io/badge/-Wazuh_SIEM-1a1a1a?style=for-the-badge&logo=wazuh&logoColor=d4af37" /><br/>
-      <img src="https://img.shields.io/badge/-Nmap-1a1a1a?style=for-the-badge&logo=nmap&logoColor=d4af37" /><br/>
-    </td>
-    <td align="center">
-      <br/>
-      <img src="https://skillicons.dev/icons?i=docker,linux,ubuntu" /><br/>
-      <img src="https://img.shields.io/badge/-Proxmox-1a1a1a?style=for-the-badge&logo=proxmox&logoColor=d4af37" /><br/>
-      <img src="https://img.shields.io/badge/-Tailscale-1a1a1a?style=for-the-badge&logo=tailscale&logoColor=d4af37" /><br/>
-    </td>
-  </tr>
-</table>
-
-<br/>
-<hr style="border: 1px solid #d4af37;" />
-<br/>
-
-### 🗝️ Open Case Files
-
-<table width="100%">
-  <tr>
-    <td width="50%" align="center">
-      <b><a href="https://github.com/sherlockk-sec/Project-Sanctuary">Case #001: The Proxmox Sanctuary</a></b><br/>
-      <i>A bare-metal virtualization cluster designed to host impenetrable strongholds and lure unsuspecting malware.</i><br/><br/>
-      <b>Suspects:</b> <code>Proxmox VE, Tailscale, Linux</code><br/><br/>
-      <a href="https://github.com/sherlockk-sec/Project-Sanctuary"><img src="https://github-readme-stats.vercel.app/api/pin/?username=sherlockk-sec&repo=Project-Sanctuary&bg_color=1E1E1E&title_color=D4AF37&text_color=CCCCCC&icon_color=D4AF37&hide_border=true" /></a>
-    </td>
-    <td width="50%" align="center">
-      <b><a href="https://github.com/sherlockk-sec/The-Wazuh-Phantom">Case #002: The Wazuh Phantom</a></b><br/>
-      <i>Deploying a centralized SIEM to trace the invisible footsteps of formidable adversaries across the digital realm.</i><br/><br/>
-      <b>Suspects:</b> <code>Wazuh, Splunk, Incident Response</code><br/><br/>
-      <a href="https://github.com/sherlockk-sec/The-Wazuh-Phantom"><img src="https://github-readme-stats.vercel.app/api/pin/?username=sherlockk-sec&repo=The-Wazuh-Phantom&bg_color=1E1E1E&title_color=D4AF37&text_color=CCCCCC&icon_color=D4AF37&hide_border=true" /></a>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" align="center">
-      <b><a href="https://github.com/sherlockk-sec/Marionettes-Code">Case #003: The Marionette's Code</a></b><br/>
-      <i>Orchestrating complex automations using n8n and Python scripts to conduct investigations without manual labor.</i><br/><br/>
-      <b>Suspects:</b> <code>n8n, Python, Bash</code><br/><br/>
-      <a href="https://github.com/sherlockk-sec/Marionettes-Code"><img src="https://github-readme-stats.vercel.app/api/pin/?username=sherlockk-sec&repo=Marionettes-Code&bg_color=1E1E1E&title_color=D4AF37&text_color=CCCCCC&icon_color=D4AF37&hide_border=true" /></a>
-    </td>
-    <td width="50%" align="center">
-      <b><a href="https://github.com/sherlockk-sec/Vulnerability-Scanner">Case #004: The Network Scanner</a></b><br/>
-      <i>Utilizing Nmap and Nessus to unearth hidden vulnerabilities and expose the weak links in target infrastructures.</i><br/><br/>
-      <b>Suspects:</b> <code>Nmap, Nessus, Security</code><br/><br/>
-      <a href="https://github.com/sherlockk-sec/Vulnerability-Scanner"><img src="https://github-readme-stats.vercel.app/api/pin/?username=sherlockk-sec&repo=Vulnerability-Scanner&bg_color=1E1E1E&title_color=D4AF37&text_color=CCCCCC&icon_color=D4AF37&hide_border=true" /></a>
-    </td>
-  </tr>
-</table>
-
-<br/>
-<hr style="border: 1px solid #d4af37;" />
-<br/>
-
-### 👞 The Trail of Evidence
 
 <div align="center">
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=sherlockk-sec&bg_color=1E1E1E&color=D4AF37&line=D4AF37&point=FFFFFF&area=true&hide_border=true" alt="Contribution Graph" />
+### 🛡️ Core Infrastructure & Tooling
+*Architecting secure bare-metal clusters, hunting threats, and automating the mundane.*
 
-<br/><br/>
+<br/>
 
-<img src="https://github-readme-stats.vercel.app/api?username=sherlockk-sec&show_icons=true&bg_color=1E1E1E&title_color=D4AF37&text_color=CCCCCC&icon_color=D4AF37&hide_border=true&count_private=true" height="190" alt="GitHub Stats" />
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=sherlockk-sec&layout=compact&bg_color=1E1E1E&title_color=D4AF37&text_color=CCCCCC&icon_color=D4AF37&hide_border=true" height="190" alt="Top Languages" />
+**Offensive Operations**<br/>
+<img src="https://img.shields.io/badge/Burp_Suite-FF3366?style=for-the-badge&logo=burpsuite&logoColor=white" />
+<img src="https://img.shields.io/badge/Metasploit-FF3366?style=for-the-badge&logo=metasploit&logoColor=white" />
+<img src="https://img.shields.io/badge/Nmap-FF3366?style=for-the-badge&logo=nmap&logoColor=white" />
+<img src="https://img.shields.io/badge/Nessus-FF3366?style=for-the-badge&logo=nessus&logoColor=white" />
+
+<br/>
+
+**Defensive & SIEM**<br/>
+<img src="https://img.shields.io/badge/Wazuh-00E5FF?style=for-the-badge&logo=wazuh&logoColor=black" />
+<img src="https://img.shields.io/badge/Splunk-00E5FF?style=for-the-badge&logo=splunk&logoColor=white" />
+<img src="https://img.shields.io/badge/Fortinet-00E5FF?style=for-the-badge&logo=fortinet&logoColor=white" />
+<img src="https://img.shields.io/badge/Incident_Response-00E5FF?style=for-the-badge&logo=shield&logoColor=black" />
+
+<br/>
+
+**Scripting & Automation**<br/>
+<img src="https://img.shields.io/badge/Python-B000FF?style=for-the-badge&logo=python&logoColor=white" />
+<img src="https://img.shields.io/badge/Bash-B000FF?style=for-the-badge&logo=gnu-bash&logoColor=white" />
+<img src="https://img.shields.io/badge/n8n-B000FF?style=for-the-badge&logo=n8n&logoColor=white" />
+
+<br/>
+
+**Virtualization & Network**<br/>
+<img src="https://img.shields.io/badge/Proxmox_VE-1A1A2E?style=for-the-badge&logo=proxmox&logoColor=00E5FF" />
+<img src="https://img.shields.io/badge/Docker-1A1A2E?style=for-the-badge&logo=docker&logoColor=00E5FF" />
+<img src="https://img.shields.io/badge/Tailscale-1A1A2E?style=for-the-badge&logo=tailscale&logoColor=00E5FF" />
+<img src="https://img.shields.io/badge/Linux-1A1A2E?style=for-the-badge&logo=linux&logoColor=00E5FF" />
 
 </div>
 
 <br/>
-<hr style="border: 1px solid #d4af37;" />
-<br/>
 
-### 🚂 Send a Telegram
+---
+
+<br/>
 
 <div align="center">
 
-<a href="https://linkedin.com/in/yourprofile"><img src="https://img.shields.io/badge/-LinkedIn-1a1a1a?style=for-the-badge&logo=linkedin&logoColor=d4af37" alt="LinkedIn" /></a>
-<a href="https://twitter.com/yourhandle"><img src="https://img.shields.io/badge/-Twitter%2FX-1a1a1a?style=for-the-badge&logo=x&logoColor=d4af37" alt="Twitter/X" /></a>
-<a href="mailto:sherlockk.sec@gmail.com"><img src="https://img.shields.io/badge/-Email_Me-1a1a1a?style=for-the-badge&logo=gmail&logoColor=d4af37" alt="Email" /></a>
-<a href="https://yourportfolio.com"><img src="https://img.shields.io/badge/-Portfolio-1a1a1a?style=for-the-badge&logo=web&logoColor=d4af37" alt="Portfolio" /></a>
+### 📊 Telemetry Data
+
+<br/>
+
+<img src="https://github-readme-stats.vercel.app/api?username=sherlockk-sec&show_icons=true&bg_color=1a1a2e&title_color=00E5FF&text_color=ffffff&icon_color=B000FF&hide_border=true&count_private=true&include_all_commits=true" height="190" alt="GitHub Stats" />
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=sherlockk-sec&layout=compact&bg_color=1a1a2e&title_color=00E5FF&text_color=ffffff&icon_color=B000FF&hide_border=true" height="190" alt="Top Languages" />
 
 <br/><br/>
 
-*Yours faithfully,*<br/>
-**sherlockk-sec**
+### 🕸️ Activity Matrix
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/sherlockk-sec/sherlockk-sec/output/github-contribution-grid-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/sherlockk-sec/sherlockk-sec/output/github-contribution-grid-snake.svg">
+  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/sherlockk-sec/sherlockk-sec/output/github-contribution-grid-snake.svg">
+</picture>
+
+</div>
+
+<br/>
+
+---
+
+<br/>
+
+<div align="center">
+
+### 🌐 Secure Communications
+
+<a href="https://sherlockk.space/">
+  <img src="https://img.shields.io/badge/Portfolio-00E5FF?style=for-the-badge&logo=web&logoColor=black" alt="Portfolio" />
+</a>
+<a href="https://linkedin.com/in/yourprofile">
+  <img src="https://img.shields.io/badge/LinkedIn-B000FF?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+</a>
+<a href="mailto:sherlockk.sec@gmail.com">
+  <img src="https://img.shields.io/badge/Email-1A1A2E?style=for-the-badge&logo=gmail&logoColor=00E5FF" alt="Email" />
+</a>
 
 </div>
