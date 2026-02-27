@@ -1,7 +1,8 @@
 <div align="center">
 
-# Karthikeyan S
-### Cybersecurity Researcher/Enthusiast
+<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=800&size=40&duration=2000&color=ffffff&center=true&vCenter=true&width=600&height=60&lines=Karthikeyan+S&repeat=false" alt="Karthikeyan S" />
+
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=500&size=20&duration=2000&color=2eb67d&center=true&vCenter=true&width=600&height=40&lines=Cybersecurity+Researcher%2FEnthusiast&repeat=false" alt="Cybersecurity Researcher/Enthusiast" />
 
 <a href="https://git.io/typing-svg">
   <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=20&duration=3500&pause=1000&color=2eb67d&center=true&vCenter=true&width=500&lines=Hunting+Anomalies+in+the+Void;Certified+Ethical+Hacker+(CEH+v12);Building+Secure+Infrastructure" alt="Typing SVG" />
