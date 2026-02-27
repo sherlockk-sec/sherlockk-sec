@@ -20,11 +20,11 @@
 
 <br/>
 
-### 🛠️ Arsenal & Technologies
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=500&height=40&lines=Arsenal+%26+Technologies&repeat=false" alt="Arsenal & Technologies" />
 
 <br/>
 
-<table align="center" style="border: none; background-color: transparent;">
+<table style="border: none; background-color: transparent;">
   <tr style="border: none;">
     <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=linux" height="50" /><br><sub>Linux</sub></td>
     <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=ubuntu" height="50" /><br><sub>Ubuntu</sub></td>
@@ -55,9 +55,9 @@
 
 <br/>
 
-<div align="center">
+<div align="left">
 
-### 📊 Telemetry Data
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=500&height=40&lines=Telemetry+Data&repeat=false" alt="Telemetry Data" />
 
 <br/>
 
@@ -72,9 +72,9 @@
 
 <br/>
 
-<div align="center">
+<div align="left">
 
-### 🕸️ Activity Matrix
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=500&height=40&lines=Activity+Matrix&repeat=false" alt="Activity Matrix" />
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/sherlockk-sec/sherlockk-sec/output/github-contribution-grid-snake-dark.svg">
@@ -90,7 +90,7 @@
 
 <div align="left">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=400&height=40&lines=Connect+With+Me&repeat=false" alt="Connect With Me" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=500&height=40&lines=Connect+With+Me&repeat=false" alt="Connect With Me" />
 
 <br/>
 
