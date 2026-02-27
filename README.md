@@ -23,22 +23,30 @@
 
 <br/>
 
-<div align="left">
-  <!-- Main skillicons -->
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=linux,ubuntu,windows,docker,python,bash,js,html,css" />
-  </a>
-  
-  <!-- Pure Security Symbols using simple-icons mapping -->
-  <img src="https://cdn.simpleicons.org/burpsuite/FF6633" height="48" style="margin-left: 5px; margin-right: 5px;" />
-  <img src="https://cdn.simpleicons.org/metasploit/2196F3" height="48" style="margin-left: 5px; margin-right: 5px;" />
-  <img src="https://cdn.simpleicons.org/nmap/000000" height="48" style="margin-left: 5px; margin-right: 5px;" />
-  <img src="https://cdn.simpleicons.org/nessus/00B1E1" height="48" style="margin-left: 5px; margin-right: 5px;" />
-  <img src="https://cdn.simpleicons.org/wazuh/00A9E5" height="48" style="margin-left: 5px; margin-right: 5px;" />
-  <img src="https://cdn.simpleicons.org/splunk/45B649" height="48" style="margin-left: 5px; margin-right: 5px;" />
-  <img src="https://cdn.simpleicons.org/proxmox/E57000" height="48" style="margin-left: 5px; margin-right: 5px;" />
-  <img src="https://cdn.simpleicons.org/tailscale/white" height="48" style="margin-left: 5px; margin-right: 5px;" />
-</div>
+<table align="center" style="border: none; background-color: transparent;">
+  <tr style="border: none;">
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=linux" height="50" /><br><sub>Linux</sub></td>
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=ubuntu" height="50" /><br><sub>Ubuntu</sub></td>
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=windows" height="50" /><br><sub>Windows</sub></td>
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=docker" height="50" /><br><sub>Docker</sub></td>
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=python" height="50" /><br><sub>Python</sub></td>
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=bash" height="50" /><br><sub>Bash</sub></td>
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=js" height="50" /><br><sub>JS</sub></td>
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=html" height="50" /><br><sub>HTML</sub></td>
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=css" height="50" /><br><sub>CSS</sub></td>
+  </tr>
+  <tr style="border: none;">
+    <td align="center" style="border: none;"><img src="https://skillicons.dev/icons?i=kali" height="48" /><br><sub>Kali Linux</sub></td>
+    <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/wireshark/1679A7" height="48" /><br><sub>Wireshark</sub></td>
+    <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/grafana/F46800" height="48" /><br><sub>Grafana</sub></td>
+    <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/burpsuite/FF6633" height="48" /><br><sub>Burp Suite</sub></td>
+    <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/metasploit/2196F3" height="48" /><br><sub>Metasploit</sub></td>
+    <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/splunk/45B649" height="48" /><br><sub>Splunk</sub></td>
+    <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/proxmox/E57000" height="48" /><br><sub>Proxmox</sub></td>
+    <td align="center" style="border: none;"><img src="https://cdn.simpleicons.org/tailscale/white" height="48" /><br><sub>Tailscale</sub></td>
+    <td align="center" style="border: none;"></td>
+  </tr>
+</table>
 
 <br/>
 
