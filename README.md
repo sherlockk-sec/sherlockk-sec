@@ -93,24 +93,16 @@
 
 ### 🌐 Connect With Me
 
-<table align="center" style="border: none; background-color: transparent;">
-  <tr style="border: none;">
-    <td align="center" style="border: none;">
-      <a href="https://sherlockk.space/">
-        <img src="https://cdn.simpleicons.org/planetscale/white" height="40" /><br><sub>Portfolio</sub>
-      </a>
-    </td>
-    <td align="center" style="border: none;">
-      <a href="https://www.linkedin.com/in/karthikeyan-s-54abaa221">
-        <img src="https://cdn.simpleicons.org/linkedin/0077B5" height="40" /><br><sub>LinkedIn</sub>
-      </a>
-    </td>
-    <td align="center" style="border: none;">
-      <a href="mailto:sherlockk.sec@gmail.com">
-        <img src="https://cdn.simpleicons.org/gmail/EA4335" height="40" /><br><sub>Email</sub>
-      </a>
-    </td>
-  </tr>
-</table>
+<br/>
+
+<a href="https://sherlockk.space/">
+  <img src="https://img.shields.io/badge/Portfolio-2b3137?style=for-the-badge&logo=planetscale&logoColor=white" alt="Portfolio" />
+</a>
+<a href="https://www.linkedin.com/in/karthikeyan-s-54abaa221">
+  <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+</a>
+<a href="mailto:sherlockk.sec@gmail.com">
+  <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
+</a>
 
 </div>
