@@ -92,20 +92,20 @@
 
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=28&duration=2000&color=2eb67d&center=true&vCenter=true&width=600&height=50&lines=Transmission+Protocols&repeat=false" alt="Transmission Protocols" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=28&duration=2000&color=2eb67d&center=true&vCenter=true&width=600&height=50&lines=Connect+With+Me&repeat=false" alt="Connect With Me" />
 
 <br/>
 
 <a href="https://sherlockk.space/">
-  <img src="https://skillicons.dev/icons?i=auto" height="60" alt="Portfolio" />
+  <img src="https://cdn.simpleicons.org/planetscale/white" height="35" alt="Portfolio" />
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="https://www.linkedin.com/in/karthikeyan-s-54abaa221">
-  <img src="https://skillicons.dev/icons?i=linkedin" height="60" alt="LinkedIn" />
+  <img src="https://cdn.simpleicons.org/linkedin/0077B5" height="35" alt="LinkedIn" />
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="mailto:sherlockk.sec@gmail.com">
-  <img src="https://skillicons.dev/icons?i=gmail" height="60" alt="Email" />
+  <img src="https://cdn.simpleicons.org/gmail/EA4335" height="35" alt="Email" />
 </a>
 
 </div>
