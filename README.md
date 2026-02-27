@@ -88,24 +88,22 @@
 
 ---
 
-<br/>
+<div align="left">
 
-<div align="center">
-
-<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=28&duration=2000&color=2eb67d&center=true&vCenter=true&width=600&height=50&lines=Connect+With+Me&repeat=false" alt="Connect With Me" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=24&duration=2000&color=2eb67d&center=false&vCenter=true&width=400&height=40&lines=Connect+With+Me&repeat=false" alt="Connect With Me" />
 
 <br/>
 
 <a href="https://sherlockk.space/">
-  <img src="https://cdn.simpleicons.org/planetscale/white" height="35" alt="Portfolio" />
+  <img src="https://img.icons8.com/fluency/35/domain.png" alt="Portfolio" />
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="https://www.linkedin.com/in/karthikeyan-s-54abaa221">
-  <img src="https://cdn.simpleicons.org/linkedin/0077B5" height="35" alt="LinkedIn" />
+  <img src="https://img.icons8.com/fluency/35/linkedin.png" alt="LinkedIn" />
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="mailto:sherlockk.sec@gmail.com">
-  <img src="https://cdn.simpleicons.org/gmail/EA4335" height="35" alt="Email" />
+  <img src="https://img.icons8.com/fluency/35/gmail-new.png" alt="Email" />
 </a>
 
 </div>
