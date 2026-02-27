@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minna no Nihongo Flashcards</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #003366;
+            margin-bottom: 20px;
+        }
+        #lesson-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        #lesson-selector button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #lesson-selector button.active {
+            background-color: #004a99;
+        }
+        #lesson-selector button:hover {
+            background-color: #0056b3;
+        }
+        #flashcard-container {
+            perspective: 1000px;
+            width: 350px;
+            height: 450px;
+        }
+        #flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 16px;
+        }
+        #flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 16px;
+            background-color: white;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        #card-image-prompt {
+            width: 90%;
+            height: 200px;
+            background-color: #f9f9f9;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            text-align: center;
+            font-style: italic;
+            color: #555;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        #card-english {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .japanese-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+        }
+        .kanji-text {
+            font-size: 24px;
+            color: #555;
+        }
+        .romaji-text {
+            font-size: 22px;
+            font-style: italic;
+            color: #0056b3;
+        }
+        #navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 350px;
+            margin-top: 20px;
+        }
+        #navigation button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            min-width: 100px;
+        }
+        #navigation button:hover {
+            background-color: #218838;
+        }
+        #flip-button {
+            background-color: #ffc107;
+            color: #333;
+        }
+        #flip-button:hover {
+            background-color: #e0a800;
+        }
+        #card-counter {
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Minna no Nihongo Flashcards</h1>
+
+    <div id="lesson-selector">
+        </div>
+
+    <div id="flashcard-container">
+        <div id="flashcard">
+            <div class="card-face card-front">
+                <div id="card-image-prompt">(Image prompt will appear here)</div>
+                <div id="card-english">Select a lesson to begin!</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="japanese-text" id="card-japanese"></div>
+                <div class="kanji-text" id="card-kanji"></div>
+                <div class="romaji-text" id="card-romaji"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="navigation">
+        <button id="prev-button" disabled>Previous</button>
+        <button id="flip-button" disabled>Flip</button>
+        <button id="next-button" disabled>Next</button>
+    </div>
+    
+    <div id="card-counter"></div>
+
+    <script>
+        // --- DATA FROM PDF ---
+        const lessons = {
+            "Preliminary": [
+                { english: "Let's begin.", japanese: "はじめましょう", kanji: "始めましょう", romaji: "hajimemashou", imagePrompt: "A minimalist icon representing 'beginning' or 'starting', like a play button or a person at a starting line." },
+                { english: "Let's finish (the lesson).", japanese: "おわりましょう", kanji: "終わりましょう", romaji: "owarimashou", imagePrompt: "A minimalist icon representing 'finishing', like a checkered flag or a stop button." },
+                { english: "Let's take a break.", japanese: "やすみましょう", kanji: "休みましょう", romaji: "yasumimashou", imagePrompt: "A minimalist icon representing 'taking a break', like a coffee cup or a person stretching." },
+                { english: "Do you understand?", japanese: "わかりますか", kanji: "分かりますか", romaji: "wakarimasu ka", imagePrompt: "A simple icon of a person with a question mark over their head, looking at another person with a checkmark." },
+                { english: "Yes, I do", japanese: "はい、わかります", kanji: "", romaji: "hai, wakarimasu", imagePrompt: "A simple icon of a person nodding with a checkmark or a thumbs-up." },
+                { english: "No, I don't", japanese: "いいえ、わかりません", kanji: "", romaji: "iie, wakarimasen", imagePrompt: "A simple icon of a person shaking their head with a red 'X' or a thumbs-down." },
+                { english: "Once more.", japanese: "もういちど", kanji: "もう一度", romaji: "mou ichido", imagePrompt: "A 'repeat' or 'replay' icon (a circular arrow)." },
+                { english: "Fine. / Good.", japanese: "けっこうです", kanji: "結構です", romaji: "kekkou desu", imagePrompt: "An 'OK' hand gesture or a simple green checkmark." },
+                { english: "That's not OK. / That's wrong.", japanese: "だめです", kanji: "駄目です", romaji: "dame desu", imagePrompt: "A large red 'X' or a person making an 'X' with their arms." },
+                { english: "name", japanese: "なまえ", kanji: "名前", romaji: "namae", imagePrompt: "A simple 'Hello, my name is...' nametag icon." },
+                { english: "exam", japanese: "しけん", kanji: "試験", romaji: "shiken", imagePrompt: "A piece of paper with a letter grade (like A+) and a checkmark." },
+                { english: "homework", japanese: "しゅくだい", kanji: "宿題", romaji: "shukudai", imagePrompt: "A book with a pencil on top, next to a house icon." },
+                { english: "question", japanese: "しつもん", kanji: "質問", romaji: "shitsumon", imagePrompt: "A large, stylized question mark." },
+                { english: "answer", japanese: "こたえ", kanji: "答え", romaji: "kotae", imagePrompt: "A large, stylized exclamation point or a lightbulb." },
+                { english: "example", japanese: "れい", kanji: "例", romaji: "rei", imagePrompt: "A document icon with 'e.g.' written on it." },
+                { english: "Good morning.", japanese: "おはようございます", kanji: "お早うございます", romaji: "ohayou gozaimasu", imagePrompt: "A rising sun icon." },
+                { english: "Good afternoon.", japanese: "こんにちは", kanji: "今日は", romaji: "konnichiwa", imagePrompt: "A sun icon at its peak (high noon)." },
+                { english: "Good evening.", japanese: "こんばんは", kanji: "今晩は", romaji: "konbanwa", imagePrompt: "A crescent moon and stars icon." },
+                { english: "Good night.", japanese: "おやすみなさい", kanji: "お休みなさい", romaji: "oyasuminasai", imagePrompt: "A bed icon or a sleeping 'Zzz' symbol." },
+                { english: "Goodbye-.", japanese: "さようなら", kanji: "", romaji: "sayounara", imagePrompt: "A simple icon of a person waving goodbye." },
+                { english: "Thank you very much", japanese: "ありがとうございます", kanji: "", romaji: "arigatou gozaimasu", imagePrompt: "An icon of two hands clasped together in gratitude, or a person bowing." },
+                { english: "Excuse me. / I'm sorry.", japanese: "すみません", kanji: "", romaji: "sumimasen", imagePrompt: "A person with a hand raised, looking apologetic, or a 'speech bubble' with '...' in it." },
+                { english: "Please.", japanese: "おねがいします", kanji: "お願いします", romaji: "onegaishimasu", imagePrompt: "An icon of a person bowing politely or hands in a 'please' gesture." },
+                { english: "0", japanese: "ゼロ、れい", kanji: "", romaji: "zero, rei", imagePrompt: "The numeral '0'." },
+                { english: "1", japanese: "いち", kanji: "一", romaji: "ichi", imagePrompt: "The numeral '1'." },
+                { english: "2", japanese: "に", kanji: "二", romaji: "ni", imagePrompt: "The numeral '2'." },
+                { english: "3", japanese: "さん", kanji: "三", romaji: "san", imagePrompt: "The numeral '3'." },
+                { english: "4", japanese: "よん、し", kanji: "四", romaji: "yon, shi", imagePrompt: "The numeral '4'." },
+                { english: "5", japanese: "ご", kanji: "五", romaji: "go", imagePrompt: "The numeral '5'." },
+                { english: "6", japanese: "ろく", kanji: "六", romaji: "roku", imagePrompt: "The numeral '6'." },
+                { english: "7", japanese: "なな、しち", kanji: "七", romaji: "nana, shichi", imagePrompt: "The numeral '7'." },
+                { english: "8", japanese: "はち", kanji: "八", romaji: "hachi", imagePrompt: "The numeral '8'." },
+                { english: "9", japanese: "きゅう、く", kanji: "九", romaji: "kyuu, ku", imagePrompt: "The numeral '9'." },
+                { english: "10", japanese: "じゅう", kanji: "十", romaji: "juu", imagePrompt: "The numeral '10'." }
+            ],
+            "Lesson 1": [
+                { english: "I", japanese: "わたし", kanji: "私", romaji: "watashi", imagePrompt: "A simple icon of a single person pointing to themselves." },
+                { english: "we", japanese: "わたしたち", kanji: "私達", romaji: "watashitachi", imagePrompt: "A simple icon of a group of people (three or more)." },
+                { english: "you", japanese: "あなた", kanji: "貴方", romaji: "anata", imagePrompt: "An icon of a person pointing directly at the viewer." },
+                { english: "that person, he, she", japanese: "あのひと", kanji: "あの人", romaji: "ano hito", imagePrompt: "An icon of a person pointing to another person in the distance." },
+                { english: "that person (polite)", japanese: "あのかた", kanji: "あの方", romaji: "ano kata", imagePrompt: "An icon of a person pointing politely (perhaps with an open hand) to a person in the distance." },
+                { english: "ladies and gentlemen, all of you", japanese: "みなさん", kanji: "皆さん", romaji: "minasan", imagePrompt: "An icon of a person on a stage addressing a crowd." },
+                { english: "Mr., Ms.", japanese: "〜さん", kanji: "", romaji: "~san", imagePrompt: "A generic silhouette icon of a person (head and shoulders)." },
+                { english: "child suffix", japanese: "〜ちゃん", kanji: "", romaji: "~chan", imagePrompt: "A simple stick figure of a small child." },
+                { english: "boy suffix", japanese: "〜くん", kanji: "君", romaji: "~kun", imagePrompt: "A simple stick figure of a small boy." },
+                { english: "nationality suffix", japanese: "〜じん", kanji: "〜人", romaji: "~jin", imagePrompt: "An icon of a globe or a flag." },
+                { english: "teacher, instructor (not one's own job)", japanese: "せんせい", kanji: "先生", romaji: "sensei", imagePrompt: "An icon of a person pointing at a chalkboard or whiteboard." },
+                { english: "teacher, instructor (one's own job)", japanese: "きょうし", kanji: "教師", romaji: "kyoushi", imagePrompt: "An icon of a person holding a book and an apple." },
+                { english: "student", japanese: "がくせい", kanji: "学生", romaji: "gakusei", imagePrompt: "An icon of a person with a backpack, holding a book." },
+                { english: "company employee", japanese: "かいしゃいん", kanji: "会社員", romaji: "kaishain", imagePrompt: "An icon of a person in a suit, holding a briefcase." },
+                { english: "employee of ~ company", japanese: "しゃいん", kanji: "社員", romaji: "shain", imagePrompt: "A building icon next to a person icon (e.g., 'IMC の しゃいん')." },
+                { english: "bank employee", japanese: "ぎんこういん", kanji: "銀行員", romaji: "ginkouin", imagePrompt: "A bank building icon (with a '$' or '¥' sign) and a person icon." },
+                { english: "medical doctor", japanese: "いしゃ", kanji: "医者", romaji: "isha", imagePrompt: "A person with a stethoscope or a white coat." },
+                { english: "researcher, scholar", japanese: "けんきゅうしゃ", kanji: "研究者", romaji: "kenkyuusha", imagePrompt: "A person looking through a microscope or holding a beaker." },
+                { english: "engineer", japanese: "エンジニア", kanji: "", romaji: "enjinia", imagePrompt: "A person with a hard hat, holding a wrench or blueprints." },
+                { english: "university", japanese: "だいがく", kanji: "大学", romaji: "daigaku", imagePrompt: "A large building with columns, or a graduation cap." },
+                { english: "hospital", japanese: "びょういん", kanji: "病院", romaji: "byouin", imagePrompt: "A building with a large red cross or 'H' on it." },
+                { english: "electricity, light", japanese: "でんき", kanji: "電気", romaji: "denki", imagePrompt: "A glowing lightbulb or a lightning bolt symbol." },
+                { english: "who", japanese: "だれ", kanji: "誰", romaji: "dare", imagePrompt: "A silhouette of a person with a large question mark over them." },
+                { english: "who (polite)", japanese: "どなた", kanji: "何方", romaji: "donata", imagePrompt: "A silhouette of a person in a suit with a large question mark over them." },
+                { english: "~ years old", japanese: "〜さい", kanji: "〜歳", romaji: "~sai", imagePrompt: "An icon of a birthday cake with candles." },
+                { english: "how old", japanese: "なんさい", kanji: "何歳", romaji: "nansai", imagePrompt: "A birthday cake with a question mark on it." },
+                { english: "how old (polite)", japanese: "おいくつ", kanji: "お幾つ", romaji: "oikutsu", imagePrompt: "A fancy birthday cake with a question mark on it." },
+                { english: "yes", japanese: "はい", kanji: "", romaji: "hai", imagePrompt: "A simple green checkmark." },
+                { english: "no", japanese: "いいえ", kanji: "", romaji: "iie", imagePrompt: "A simple red 'X'." },
+                { english: "Excuse me, but", japanese: "しつれいですが", kanji: "失礼ですが", romaji: "shitsurei desu ga", imagePrompt: "A person politely interrupting, with a hand raised." },
+                { english: "May I have your name?", japanese: "おなまえは?", kanji: "お名前は?", romaji: "onamae wa?", imagePrompt: "A nametag icon with a question mark on it." },
+                { english: "How do you do?", japanese: "はじめまして。", kanji: "初めまして。", romaji: "hajimemashite.", imagePrompt: "An icon of two people meeting for the first time and shaking hands." },
+                { english: "Pleased to meet you.", japanese: "どうぞよろしくおねがいします", kanji: "どうぞ宜しくお願いします", romaji: "douzo yoroshiku onegaishimasu", imagePrompt: "Two people bowing to each other." },
+                { english: "This is Mr./Ms. ~.", japanese: "こちらは〜さんです。", kanji: "此方は〜さんです", romaji: "kochira wa ~san desu.", imagePrompt: "An icon of a person gesturing with an open hand towards another person." },
+                { english: "I came (come) from ~.", japanese: "〜からきました", kanji: "〜から来ました", romaji: "~kara kimashita", imagePrompt: "An icon of a person, an arrow, and a globe/country flag (e.g., USA -> person)." }
+            ],
+            "Lesson 2": [
+                { english: "this (thing near speaker)", japanese: "これ", kanji: "", romaji: "kore", imagePrompt: "An icon of a hand pointing to an object right next to it." },
+                { english: "that (thing near listener)", japanese: "それ", kanji: "", romaji: "sore", imagePrompt: "An icon of a person pointing to an object slightly further away (near a 'listener')." },
+                { english: "that (thing far from both)", japanese: "あれ", kanji: "", romaji: "are", imagePrompt: "An icon of a person pointing to an object far in the distance." },
+                { english: "this ~", japanese: "この〜", kanji: "", romaji: "kono ~", imagePrompt: "An icon of a hand pointing to an object, with a blank '___' next to the object." },
+                { english: "that ~", japanese: "その〜", kanji: "", romaji: "sono ~", imagePrompt: "An icon of a person pointing to an object (near a 'listener'), with a blank '___' next to the object." },
+                { english: "that ~ (over there)", japanese: "あの〜", kanji: "", romaji: "ano ~", imagePrompt: "An icon of a person pointing to a distant object, with a blank '___' next to the object." },
+                { english: "book", japanese: "ほん", kanji: "本", romaji: "hon", imagePrompt: "A simple icon of an open book." },
+                { english: "dictionary", japanese: "じしょ", kanji: "辞書", romaji: "jisho", imagePrompt: "A thick book icon with '[A-Z]' or 'あ-ん' on the cover." },
+                { english: "magazine", japanese: "ざっし", kanji: "雑誌", romaji: "zasshi", imagePrompt: "A thin book or pamphlet with a picture on the cover." },
+                { english: "newspaper", japanese: "しんぶん", kanji: "新聞", romaji: "shinbun", imagePrompt: "An icon of a folded newspaper." },
+                { english: "notebook", japanese: "ノート", kanji: "", romaji: "no-to", imagePrompt: "A spiral-bound notebook." },
+                { english: "pocket notebook", japanese: "てちょう", kanji: "手帳", romaji: "techou", imagePrompt: "A small, pocket-sized book." },
+                { english: "business card", japanese: "めいし", kanji: "名刺", romaji: "meishi", imagePrompt: "A small card with a person icon and lines of text." },
+                { english: "card", japanese: "カード", kanji: "", romaji: "ka-do", imagePrompt: "A credit card or ID card icon." },
+                { english: "telephone card", japanese: "テレホンカード", kanji: "", romaji: "terehon ka-do", imagePrompt: "A small card with a telephone icon on it." },
+                { english: "pencil", japanese: "えんぴつ", kanji: "鉛筆", romaji: "enpitsu", imagePrompt: "A simple icon of a pencil." },
+                { english: "ballpoint pen", japanese: "ボールペン", kanji: "", romaji: "bo-rupen", imagePrompt: "A simple icon of a click-pen." },
+                { english: "mechanical pencil", japanese: "シャープペンシル", kanji: "", romaji: "sha-pu penshiru", imagePrompt: "A pencil with a 'clicker' on top." },
+                { english: "key", japanese: "かぎ", kanji: "鍵", romaji: "kagi", imagePrompt: "A simple icon of a house key." },
+                { english: "watch, clock", japanese: "とけい", kanji: "時計", romaji: "tokei", imagePrompt: "An icon of a wristwatch or a wall clock." },
+                { english: "umbrella", japanese: "かさ", kanji: "傘", romaji: "kasa", imagePrompt: "A simple icon of an open umbrella." },
+                { english: "bag, briefcase", japanese: "かばん", kanji: "鞄", romaji: "kaban", imagePrompt: "A briefcase or a backpack icon." },
+                { english: "cassette tape", japanese: "カセットテープ", kanji: "", romaji: "kasetto te-pu", imagePrompt: "A retro icon of a cassette tape." },
+                { english: "tape recorder", japanese: "テープレコーダー", kanji: "", romaji: "te-pu reko-da-", imagePrompt: "A retro 'boombox' or tape player icon." },
+                { english: "television", japanese: "テレビ", kanji: "", romaji: "terebi", imagePrompt: "A simple icon of a TV set." },
+                { english: "radio", japanese: "ラジオ", kanji: "", romaji: "rajio", imagePrompt: "A simple icon of a portable radio." },
+                { english: "camera", japanese: "カメラ", kanji: "", romaji: "kamera", imagePrompt: "A simple icon of a camera." },
+                { english: "computer", japanese: "コンピューター", kanji: "", romaji: "konpyu-ta-", imagePrompt: "A simple icon of a laptop or desktop computer." },
+                { english: "automobile, car", japanese: "じどうしゃ", kanji: "自動車", romaji: "jidousha", imagePrompt: "A simple icon of a car." },
+                { english: "desk", japanese: "つくえ", kanji: "机", romaji: "tsukue", imagePrompt: "A simple icon of a desk." },
+                { english: "chair", japanese: "いす", kanji: "椅子", romaji: "isu", imagePrompt: "A simple icon of a chair." },
+                { english: "chocolate", japanese: "チョコレート", kanji: "", romaji: "chokore-to", imagePrompt: "An icon of a chocolate bar." },
+                { english: "coffee", japanese: "コーヒー", kanji: "", romaji: "ko-hi-", imagePrompt: "A steaming coffee mug." },
+                { english: "the English language", japanese: "えいご", kanji: "英語", romaji: "eigo", imagePrompt: "The flag of the UK or USA." },
+                { english: "the Japanese language", japanese: "にほんご", kanji: "日本語", romaji: "nihongo", imagePrompt: "The flag of Japan." },
+                { english: "~ language", japanese: "〜ご", kanji: "〜語", romaji: "~go", imagePrompt: "A speech bubble with a '___' inside." },
+                { english: "what", japanese: "なん", kanji: "何", romaji: "nan", imagePrompt: "A large question mark." },
+                { english: "so", japanese: "そう", kanji: "", romaji: "sou", imagePrompt: "A 'thumbs up' or 'check mark' icon." },
+                { english: "No, it isn't. / You are wrong.", japanese: "ちがいます", kanji: "違います", romaji: "chigaimasu", imagePrompt: "A large red 'X' icon." },
+                { english: "I see. / Is that so?", japanese: "そうですか", kanji: "", romaji: "sou desu ka", imagePrompt: "A person with a 'lightbulb' icon, indicating understanding." },
+                { english: "well...", japanese: "あのう", kanji: "", romaji: "anou", imagePrompt: "A speech bubble with '...' in it, indicating hesitation." },
+                { english: "It's a token of my gratitude.", japanese: "ほんのきもちです", kanji: "本の気持ちです", romaji: "hon no kimochi desu", imagePrompt: "A small, wrapped gift box." },
+                { english: "Please. / Here you are.", japanese: "どうぞ", kanji: "", romaji: "douzo", imagePrompt: "An icon of a hand offering an object." },
+                { english: "Well, thanks.", japanese: "どうも", kanji: "", romaji: "doumo", imagePrompt: "A simple 'smiley face' icon." },
+                { english: "Thank you very much.", japanese: "どうもありがとうございます", kanji: "", romaji: "doumo arigatou gozaimasu", imagePrompt: "A person bowing deeply." }
+            ],
+            "Lesson 3": [
+                { english: "I hope for your kind assistance hereafter.", japanese: "これからおせわになります", kanji: "これからお世話になります", romaji: "korekara osewa ni narimasu", imagePrompt: "Two people shaking hands and bowing slightly." },
+                { english: "I am pleased to meet you, too.", japanese: "こちらこそよろしく", kanji: "", romaji: "kochirakoso yoroshiku", imagePrompt: "A person responding to a bow with their own bow." },
+                { english: "here, this place", japanese: "ここ", kanji: "", romaji: "koko", imagePrompt: "A map pin icon with 'You Are Here' text." },
+                { english: "there, that place near you", japanese: "そこ", kanji: "", romaji: "soko", imagePrompt: "An icon of a person pointing to a spot near a 'listener'." },
+                { english: "that place over there", japanese: "あそこ", kanji: "", romaji: "asoko", imagePrompt: "An icon of a person pointing to a spot in the distance." },
+                { english: "where, what place", japanese: "どこ", kanji: "", romaji: "doko", imagePrompt: "A map icon with a large question mark." },
+                { english: "this way, this place (polite)", japanese: "こちら", kanji: "", romaji: "kochira", imagePrompt: "A person gesturing politely (open hand) to the immediate area." },
+                { english: "that way, that place (polite)", japanese: "そちら", kanji: "", romaji: "sochira", imagePrompt: "A person gesturing politely (open hand) towards the 'listener's' area." },
+                { english: "that way, that place over there (polite)", japanese: "あちら", kanji: "", romaji: "achira", imagePrompt: "A person gesturing politely (open hand) towards a distant area." },
+                { english: "which way, where (polite)", japanese: "どちら", kanji: "", romaji: "dochira", imagePrompt: "A person in a suit shrugging, with a map and question mark." },
+                { english: "classroom", japanese: "きょうしつ", kanji: "教室", romaji: "kyoushitsu", imagePrompt: "A simple icon of a chalkboard and desks." },
+                { english: "dining hall, canteen", japanese: "しょくどう", kanji: "食堂", romaji: "shokudou", imagePrompt: "An icon of a tray with food, or a fork and knife." },
+                { english: "office", japanese: "じむしょ", kanji: "事務所", romaji: "jimusho", imagePrompt: "An icon of a desk, chair, and computer." },
+                { english: "conference room", japanese: "かいぎしつ", kanji: "会議室", romaji: "kaigishitsu", imagePrompt: "A large table with several chairs around it." },
+                { english: "reception desk", japanese: "うけつけ", kanji: "受付", romaji: "uketsuke", imagePrompt: "A front desk icon with a bell or a person." },
+                { english: "lobby", japanese: "ロビー", kanji: "", romaji: "robi-", imagePrompt: "An icon of a sofa and a small table." },
+                { english: "room", japanese: "へや", kanji: "部屋", romaji: "heya", imagePrompt: "A simple icon of a door." },
+                { english: "toilet, restroom", japanese: "トイレ(おてあらい)", kanji: "(お手洗い)", romaji: "toire (otearai)", imagePrompt: "Standard male and female restroom symbols." },
+                { english: "staircase", japanese: "かいだん", kanji: "階段", romaji: "kaidan", imagePrompt: "An icon of stairs." },
+                { english: "elevator, lift", japanese: "エレベーター", kanji: "", romaji: "erebe-ta-", imagePrompt: "An icon of an elevator with 'up' and 'down' arrows." },
+                { english: "escalator", japanese: "エスカレーター", kanji: "", romaji: "esukare-ta-", imagePrompt: "An icon of an escalator (stairs on a diagonal)." },
+                { english: "country", japanese: "[お]くに", kanji: "[お]国", romaji: "[o]kuni", imagePrompt: "A globe icon." },
+                { english: "company", japanese: "かいしゃ", kanji: "会社", romaji: "kaisha", imagePrompt: "A large office building icon." },
+                { english: "house, home", japanese: "うち", kanji: "家", romaji: "uchi", imagePrompt: "A simple house icon." },
+                { english: "telephone, telephone call", japanese: "でんわ", kanji: "電話", romaji: "denwa", imagePrompt: "A telephone icon (classic or mobile)." },
+                { english: "shoes", japanese: "くつ", kanji: "靴", romaji: "kutsu", imagePrompt: "An icon of a pair of shoes." },
+                { english: "necktie", japanese: "ネクタイ", kanji: "", romaji: "nekutai", imagePrompt: "An icon of a necktie." },
+                { english: "wine", japanese: "ワイン", kanji: "", romaji: "wain", imagePrompt: "A wine bottle and a wine glass icon." },
+                { english: "tobacco, cigarette", japanese: "たばこ", kanji: "煙草", romaji: "tabako", imagePrompt: "An icon of a cigarette." },
+                { english: "department, counter (in store)", japanese: "うりば", kanji: "売り場", romaji: "uriba", imagePrompt: "A shopping cart or cash register icon." },
+                { english: "basement", japanese: "ちか", kanji: "地下", romaji: "chika", imagePrompt: "An icon of an arrow pointing down, next to a building." },
+                { english: "~th floor", japanese: "〜かい(~がい)", kanji: "〜階", romaji: "~kai (~gai)", imagePrompt: "An elevator button panel with '___' highlighted." },
+                { english: "what floor", japanese: "なんがい", kanji: "何階", romaji: "nangai", imagePrompt: "An elevator button panel with a question mark." },
+                { english: "~ yen", japanese: "〜えん", kanji: "〜円", romaji: "~en", imagePrompt: "The Japanese Yen symbol '¥'." },
+                { english: "how much", japanese: "いくら", kanji: "幾ら", romaji: "ikura", imagePrompt: "A price tag with a question mark on it." },
+                { english: "hundred", japanese: "ひゃく", kanji: "百", romaji: "hyaku", imagePrompt: "The number '100'." },
+                { english: "thousand", japanese: "せん", kanji: "千", romaji: "sen", imagePrompt: "The number '1,000'." },
+                { english: "ten thousand", japanese: "まん", kanji: "万", romaji: "man", imagePrompt: "The number '10,000'." },
+                { english: "Excuse me.", japanese: "すみません", kanji: "", romaji: "sumimasen", imagePrompt: "A person with a hand raised, trying to get attention." },
+                { english: "polite equivalent of です", japanese: "〜でございます", kanji: "", romaji: "~de gozaimasu", imagePrompt: "A person in a suit bowing very politely." },
+                { english: "Please show me [~].", japanese: "[~を]みせてください", kanji: "[~を]見せてください", romaji: "[~o] misete kudasai", imagePrompt: "An icon of a hand holding an object, and an 'eye' icon looking at it." },
+                { english: "well, then, in that case", japanese: "じゃ", kanji: "", romaji: "ja", imagePrompt: "A speech bubble with an arrow pointing forward (like 'OK, next...')." },
+                { english: "Give me [~], please.", japanese: "[~を]ください", kanji: "[~を]ください", romaji: "[~o] kudasai", imagePrompt: "An icon of a hand in a 'giving' or 'receiving' gesture." }
+            ],
+            "Lesson 4": [
+                { english: "get up, wake up", japanese: "おきます", kanji: "起きます", romaji: "okimasu", imagePrompt: "An icon of an alarm clock ringing, or a person stretching in bed." },
+                { english: "sleep, go to bed", japanese: "ねます", kanji: "寝ます", romaji: "nemasu", imagePrompt: "A bed icon with 'Zzz' above it." },
+                { english: "work", japanese: "はたらきます", kanji: "働きます", romaji: "hatarakimasu", imagePrompt: "An icon of a person with a briefcase, or a desk and chair." },
+                { english: "take a rest, take a holiday", japanese: "やすみます", kanji: "休みます", romaji: "yasumimasu", imagePrompt: "A person relaxing in a hammock or a beach chair." },
+                { english: "study", japanese: "べんきょうします", kanji: "勉強します", romaji: "benkyou shimasu", imagePrompt: "A person reading a book at a desk." },
+                { english: "finish", japanese: "おわります", kanji: "終わります", romaji: "owarimasu", imagePrompt: "A checkered flag, like at the end of a race." },
+                { english: "department store", japanese: "デパート", kanji: "", romaji: "depa-to", imagePrompt: "A large building icon with multiple floors and a flag on top." },
+                { english: "bank", japanese: "ぎんこう", kanji: "銀行", romaji: "ginkou", imagePrompt: "A building icon with a '¥' or '$' sign." },
+                { english: "post office", japanese: "ゆうびんきょく", kanji: "郵便局", romaji: "yuubinkyoku", imagePrompt: "A building icon with an envelope or the Japanese postal symbol (〒)." },
+                { english: "library", japanese: "としょかん", kanji: "図書館", romaji: "toshokan", imagePrompt: "A building icon with a book symbol." },
+                { english: "art museum", japanese: "びじゅつかん", kanji: "美術館", romaji: "bijutsukan", imagePrompt: "A building icon with a painting or picture frame symbol." },
+                { english: "now", japanese: "いま", kanji: "今", romaji: "ima", imagePrompt: "A clock icon with the hands moving." },
+                { english: "-o'clock", japanese: "〜じ", kanji: "〜時", romaji: "~ji", imagePrompt: "A clock face with '___' in the middle." },
+                { english: "~ minute", japanese: "〜ふん (〜ぷん)", kanji: "〜分", romaji: "~fun (~pun)", imagePrompt: "A stopwatch icon." },
+                { english: "half", japanese: "はん", kanji: "半", romaji: "han", imagePrompt: "A circle or clock face that is exactly half-shaded." },
+                { english: "what time", japanese: "なんじ", kanji: "何時", romaji: "nanji", imagePrompt: "A clock icon with a question mark." },
+                { english: "what minute", japanese: "なんぷん", kanji: "何分", romaji: "nanpun", imagePrompt: "A stopwatch icon with a question mark." },
+                { english: "a.m., morning", japanese: "ごぜん", kanji: "午前", romaji: "gozen", imagePrompt: "A clock face showing 9:00 AM and a rising sun." },
+                { english: "p.m., afternoon", japanese: "ごご", kanji: "午後", romaji: "gogo", imagePrompt: "A clock face showing 3:00 PM and a high sun." },
+                { english: "morning", japanese: "あさ", kanji: "朝", romaji: "asa", imagePrompt: "A rising sun and a coffee cup." },
+                { english: "daytime, noon", japanese: "ひる", kanji: "昼", romaji: "hiru", imagePrompt: "A bright sun at its peak." },
+                { english: "night, evening", japanese: "ばん(よる)", kanji: "晩(夜)", romaji: "ban (yoru)", imagePrompt: "A crescent moon and stars." },
+                { english: "the day before yesterday", japanese: "おととい", kanji: "一昨日", romaji: "ototoi", imagePrompt: "A calendar page with a date circled, and two arrows pointing 'back'." },
+                { english: "yesterday", japanese: "きのう", kanji: "昨日", romaji: "kinou", imagePrompt: "A calendar page with a date circled, and one arrow pointing 'back'." },
+                { english: "today", japanese: "きょう", kanji: "今日", romaji: "kyou", imagePrompt: "A calendar page with 'TODAY' circled." },
+                { english: "tomorrow", japanese: "あした", kanji: "明日", romaji: "ashita", imagePrompt: "A calendar page with a date circled, and one arrow pointing 'forward'." },
+                { english: "the day after tomorrow", japanese: "あさって", kanji: "明後日", romaji: "asatte", imagePrompt: "A calendar page with a date circled, and two arrows pointing 'forward'." },
+                { english: "this morning", japanese: "けさ", kanji: "今朝", romaji: "kesa", imagePrompt: "A calendar with 'TODAY' circled, and a rising sun icon." },
+                { english: "this evening, tonight", japanese: "こんばん", kanji: "今晩", romaji: "konban", imagePrompt: "A calendar with 'TODAY' circled, and a moon icon." },
+                { english: "rest, a holiday, a day off", japanese: "やすみ", kanji: "休み", romaji: "yasumi", imagePrompt: "A person relaxing in a hammock." },
+                { english: "lunchtime", japanese: "ひるやすみ", kanji: "昼休み", romaji: "hiruyasumi", imagePrompt: "A sandwich and an apple next to a clock showing 12:00." },
+                { english: "every morning", japanese: "まいあさ", kanji: "毎朝", romaji: "maiasa", imagePrompt: "Multiple rising sun icons in a row (Mon, Tue, Wed...)." },
+                { english: "every evening", japanese: "まいばん", kanji: "毎晩", romaji: "maiban", imagePrompt: "Multiple moon icons in a row (Mon, Tue, Wed...)." },
+                { english: "every day", japanese: "まいにち", kanji: "毎日", romaji: "mainichi", imagePrompt: "A calendar icon with every day highlighted." },
+                { english: "Monday", japanese: "げつようび", kanji: "月曜日", romaji: "getsuyoubi", imagePrompt: "A calendar page with 'Monday' highlighted." },
+                { english: "Tuesday", japanese: "かようび", kanji: "火曜日", romaji: "kayoubi", imagePrompt: "A calendar page with 'Tuesday' highlighted." },
+                { english: "Wednesday", japanese: "すいようび", kanji: "水曜日", romaji: "suiyoubi", imagePrompt: "A calendar page with 'Wednesday' highlighted." },
+                { english: "Thursday", japanese: "もくようび", kanji: "木曜日", romaji: "mokuyoubi", imagePrompt: "A calendar page with 'Thursday' highlighted." },
+                { english: "Friday", japanese: "きんようび", kanji: "金曜日", romaji: "kinyoubi", imagePrompt: "A calendar page with 'Friday' highlighted." },
+                { english: "Saturday", japanese: "どようび", kanji: "土曜日", romaji: "doyoubi", imagePrompt: "A calendar page with 'Saturday' highlighted." },
+                { english: "Sunday", japanese: "にちようび", kanji: "日曜日", romaji: "nichiyoubi", imagePrompt: "A calendar page with 'Sunday' highlighted." },
+                { english: "what day of the week", japanese: "なんようび", kanji: "何曜日", romaji: "nanyoubi", imagePrompt: "A calendar page with a large question mark." },
+                { english: "number", japanese: "ばんごう", kanji: "番号", romaji: "bangou", imagePrompt: "The '#' symbol." },
+                { english: "what number", japanese: "なんばん", kanji: "何番", romaji: "nanban", imagePrompt: "The '#' symbol followed by a question mark." },
+                { english: "from ~", japanese: "〜から", kanji: "", romaji: "~kara", imagePrompt: "An arrow pointing *away* from a blank '___'." },
+                { english: "up to ~, until ~", japanese: "〜まで", kanji: "", romaji: "~made", imagePrompt: "An arrow pointing *towards* a blank '___'." },
+                { english: "and (used to connect nouns)", japanese: "〜と〜", kanji: "", romaji: "~to~", imagePrompt: "A plus sign '+' between two blank boxes." },
+                { english: "your place", japanese: "そちら", kanji: "", romaji: "sochira", imagePrompt: "An icon of a person pointing at a 'listener's' house or location." },
+                { english: "That's tough, isn't it?", japanese: "たいへんですね。", kanji: "大変ですね。", romaji: "taihen desu ne.", imagePrompt: "A person with a 'sweat drop' icon, looking stressed or sympathetic." },
+                { english: "well, let me see", japanese: "えーと", kanji: "", romaji: "e-to", imagePrompt: "A person thinking, with a '...' speech bubble." },
+                { english: "information, directory assistance", japanese: "104", kanji: "", romaji: "104", imagePrompt: "A telephone icon with '104' and a question mark." },
+                { english: "Please. (ask for a favor)", japanese: "おねがいします。", kanji: "お願いします。", romaji: "onegaishimasu.", imagePrompt: "A person bowing politely." },
+                { english: "Certainly (sir, madam).", japanese: "かしこまりました。", kanji: "", romaji: "kashikomarimashita.", imagePrompt: "A clerk or attendant giving a crisp, formal bow." },
+                { english: "the number being inquired about", japanese: "おといあわせのばんごう", kanji: "お問い合わせの番号", romaji: "otoiawase no bangou", imagePrompt: "A telephone number with a magnifying glass over it." }
+            ],
+            "Lesson 5": [
+                { english: "go", japanese: "いきます", kanji: "行きます", romaji: "ikimasu", imagePrompt: "An arrow pointing away from a person; a 'go' sign." },
+                { english: "come", japanese: "きます", kanji: "来ます", romaji: "kimasu", imagePrompt: "An arrow pointing towards a person; a 'welcome' mat." },
+                { english: "go home, return", japanese: "かえります", kanji: "帰ります", romaji: "kaerimasu", imagePrompt: "A person icon walking towards a house icon." },
+                { english: "school", japanese: "がっこう", kanji: "学校", romaji: "gakkou", imagePrompt: "A school building icon." },
+                { english: "supermarket", japanese: "スーパー", kanji: "", romaji: "su-pa-", imagePrompt: "A shopping cart icon." },
+                { english: "station", japanese: "えき", kanji: "駅", romaji: "eki", imagePrompt: "A train or subway icon." },
+                { english: "airplane", japanese: "ひこうき", kanji: "飛行機", romaji: "hikouki", imagePrompt: "An airplane icon." },
+                { english: "ship", japanese: "ふね", kanji: "船", romaji: "fune", imagePrompt: "A ship or boat icon." },
+                { english: "electric train", japanese: "でんしゃ", kanji: "電車", romaji: "densha", imagePrompt: "A modern train icon (like a bullet train)." },
+                { english: "subway, underground", japanese: "ちかてつ", kanji: "地下鉄", romaji: "chikatetsu", imagePrompt: "A train icon with an arrow pointing down (for 'underground')." },
+                { english: "the Shinkansen, bullet train", japanese: "しんかんせん", kanji: "新幹線", romaji: "shinkansen", imagePrompt: "A sleek, fast-looking bullet train." },
+                { english: "bus", japanese: "バス", kanji: "", romaji: "basu", imagePrompt: "A bus icon." },
+                { english: "taxi", japanese: "タクシー", kanji: "", romaji: "takushi-", imagePrompt: "A taxi icon (car with 'TAXI' sign)." },
+                { english: "bicycle", japanese: "じてんしゃ", kanji: "自転車", romaji: "jitensha", imagePrompt: "A bicycle icon." },
+                { english: "on foot", japanese: "あるいて", kanji: "歩いて", romaji: "aruite", imagePrompt: "An icon of footprints or a person walking." },
+                { english: "person, people", japanese: "ひと", kanji: "人", romaji: "hito", imagePrompt: "A simple person/stick figure icon." },
+                { english: "friend", japanese: "ともだち", kanji: "友達", romaji: "tomodachi", imagePrompt: "Two people icons standing together, smiling." },
+                { english: "he, boyfriend, lover", japanese: "かれ", kanji: "彼", romaji: "kare", imagePrompt: "A male person icon." },
+                { english: "she, girlfriend, lover", japanese: "かのじょ", kanji: "彼女", romaji: "kanojo", imagePrompt: "A female person icon." },
+                { english: "family", japanese: "かぞく", kanji: "家族", romaji: "kazoku", imagePrompt: "An icon of several people (adults and child) together under one roof." },
+                { english: "alone, by oneself", japanese: "ひとりで", kanji: "一人で", romaji: "hitori de", imagePrompt: "A single person icon standing alone." },
+                { english: "last week", japanese: "せんしゅう", kanji: "先週", romaji: "senshuu", imagePrompt: "A calendar icon with the previous week highlighted." },
+                { english: "this week", japanese: "こんしゅう", kanji: "今週", romaji: "konshuu", imagePrompt: "A calendar icon with the current week highlighted." },
+                { english: "next week", japanese: "らいしゅう", kanji: "来週", romaji: "raishuu", imagePrompt: "A calendar icon with the next week highlighted." },
+                { english: "last month", japanese: "せんげつ", kanji: "先月", romaji: "sengetsu", imagePrompt: "A calendar icon with the previous month shown." },
+                { english: "this month", japanese: "こんげつ", kanji: "今月", romaji: "kongetsu", imagePrompt: "A calendar icon with the current month shown." },
+                { english: "next month", japanese: "らいげつ", kanji: "来月", romaji: "raigetsu", imagePrompt: "A calendar icon showing the next month." },
+                { english: "last year", japanese: "きょねん", kanji: "去年", romaji: "kyonen", imagePrompt: "A calendar showing the previous year (e.g., '2023')." },
+                { english: "this year", japanese: "ことし", kanji: "今年", romaji: "kotoshi", imagePrompt: "A calendar showing the current year (e.g., '2024')." },
+                { english: "next year", japanese: "らいねん", kanji: "来年", romaji: "rainen", imagePrompt: "A calendar showing the next year (e.g., '2025')." },
+                { english: "~th month of the year", japanese: "〜がつ", kanji: "〜月", romaji: "~gatsu", imagePrompt: "A calendar page with '___' for the month." },
+                { english: "what month", japanese: "なんがつ", kanji: "何月", romaji: "nangatsu", imagePrompt: "A calendar page with '?' for the month." },
+                { english: "first day of the month", japanese: "ついたち", kanji: "一日", romaji: "tsuitachi", imagePrompt: "A calendar page with the '1' circled." },
+                { english: "second, two days", japanese: "ふつか", kanji: "二日", romaji: "futsuka", imagePrompt: "A calendar page with the '2' circled." },
+                { english: "third, three days", japanese: "みっか", kanji: "三日", romaji: "mikka", imagePrompt: "A calendar page with the '3' circled." },
+                { english: "fourth, four days", japanese: "よっか", kanji: "四日", romaji: "yokka", imagePrompt: "A calendar page with the '4' circled." },
+                { english: "fifth, five days", japanese: "いつか", kanji: "五日", romaji: "itsuka", imagePrompt: "A calendar page with the '5' circled." },
+                { english: "sixth, six days", japanese: "むいか", kanji: "六日", romaji: "muika", imagePrompt: "A calendar page with the '6' circled." },
+                { english: "seventh, seven days", japanese: "なのか", kanji: "七日", romaji: "nanoka", imagePrompt: "A calendar page with the '7' circled." },
+                { english: "eighth, eight days", japanese: "ようか", kanji: "八日", romaji: "youka", imagePrompt: "A calendar page with the '8' circled." },
+                { english: "ninth, nine days", japanese: "ここのか", kanji: "九日", romaji: "kokonoka", imagePrompt: "A calendar page with the '9' circled." },
+                { english: "tenth, ten days", japanese: "とおか", kanji: "十日", romaji: "tooka", imagePrompt: "A calendar page with the '10' circled." },
+                { english: "fourteenth, fourteen days", japanese: "じゅうよっか", kanji: "十四日", romaji: "juuyokka", imagePrompt: "A calendar page with the '14' circled." },
+                { english: "twentieth, twenty days", japanese: "はつか", kanji: "二十日", romaji: "hatsuka", imagePrompt: "A calendar page with the '20' circled." },
+                { english: "twenty-fourth, twenty-four days", japanese: "にじゅうよっか", kanji: "二十四日", romaji: "nijuuyokka", imagePrompt: "A calendar page with the '24' circled." },
+                { english: "~th day of the month, ~ days", japanese: "〜にち", kanji: "〜日", romaji: "~nichi", imagePrompt: "A calendar page with '___' circled." },
+                { english: "which day of the month, how many days", japanese: "なんにち", kanji: "何日", romaji: "nannichi", imagePrompt: "A calendar page with '?' circled." },
+                { english: "when", japanese: "いつ", kanji: "何時", romaji: "itsu", imagePrompt: "A calendar and a clock, both with question marks." },
+                { english: "birthday", japanese: "たんじょうび", kanji: "誕生日", romaji: "tanjoubi", imagePrompt: "A birthday cake icon." },
+                { english: "local (train)", japanese: "ふつう", kanji: "普通", romaji: "futsuu", imagePrompt: "A train icon with 'LOCAL' written on it, and many 'stop' icons." },
+                { english: "rapid", japanese: "きゅうこう", kanji: "急行", romaji: "kyuukou", imagePrompt: "A train icon with 'RAPID' written on it, and a few 'stop' icons." },
+                { english: "express", japanese: "とっきゅう", kanji: "特急", romaji: "tokkyuu", imagePrompt: "A train icon with 'EXPRESS' written on it, and very few 'stop' icons." },
+                { english: "next", japanese: "つぎの", kanji: "次の", romaji: "tsugi no", imagePrompt: "A large right-facing arrow." },
+                { english: "You're welcome.", japanese: "どういたしまして。", kanji: "", romaji: "douitashimashite.", imagePrompt: "A smiling person icon, responding to a 'thank you'." },
+                { english: "platform ~, ~th platform", japanese: "〜ばんせん", kanji: "〜番線", romaji: "~bansen", imagePrompt: "A train platform sign with '___' on it." }
+            ]
+            // Note: Data for Lesson 6 was not present in the provided PDF text.
+        };
+
+        // --- APPLICATION LOGIC ---
+        let currentDeck = [];
+        let currentIndex = 0;
+        let currentLesson = "";
+
+        // DOM Elements
+        const lessonSelector = document.getElementById('lesson-selector');
+        const flashcard = document.getElementById('flashcard');
+        const cardImagePrompt = document.getElementById('card-image-prompt');
+        const cardEnglish = document.getElementById('card-english');
+        const cardJapanese = document.getElementById('card-japanese');
+        const cardKanji = document.getElementById('card-kanji');
+        const cardRomaji = document.getElementById('card-romaji');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const flipButton = document.getElementById('flip-button');
+        const cardCounter = document.getElementById('card-counter');
+
+        // --- FUNCTIONS ---
+
+        function loadLesson(lessonName) {
+            // Set active button
+            document.querySelectorAll('#lesson-selector button').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === lessonName);
+            });
+            
+            // Load deck
+            currentLesson = lessonName;
+            currentDeck = lessons[lessonName];
+            currentIndex = 0;
+            
+            // Reset card
+            flashcard.classList.remove('is-flipped');
+            
+            // Enable buttons
+            flipButton.disabled = false;
+            
+            // Load first card
+            displayCard();
+        }
+
+        function displayCard() {
+            if (currentDeck.length === 0) return;
+
+            const card = currentDeck[currentIndex];
+
+            // Front
+            cardEnglish.textContent = card.english;
+            // This is where you would set the image URL
+            // cardImage.src = card.imageUrl; 
+            // For now, we display the prompt:
+            cardImagePrompt.textContent = card.imagePrompt;
+
+            // Back
+            cardJapanese.textContent = card.japanese;
+            cardKanji.textContent = card.kanji || ""; // Show nothing if no kanji
+            cardRomaji.textContent = card.romaji;
+            
+            // Update counter
+            cardCounter.textContent = `${currentIndex + 1} / ${currentDeck.length}`;
+            
+            // Update nav buttons
+            prevButton.disabled = (currentIndex === 0);
+            nextButton.disabled = (currentIndex === currentDeck.length - 1);
+        }
+
+        function flipCard() {
+            flashcard.classList.toggle('is-flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex < currentDeck.length - 1) {
+                currentIndex++;
+                flashcard.classList.remove('is-flipped');
+                displayCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                flashcard.classList.remove('is-flipped');
+                displayCard();
+            }
+        }
+
+        // --- INITIALIZATION ---
+        
+        function populateLessonButtons() {
+            const lessonNames = Object.keys(lessons);
+            for (const lessonName of lessonNames) {
+                const button = document.createElement('button');
+                button.textContent = lessonName;
+                button.onclick = () => loadLesson(lessonName);
+                lessonSelector.appendChild(button);
+            }
+        }
+        
+        // Event Listeners
+        flipButton.addEventListener('click', flipCard);
+        nextButton.addEventListener('click', nextCard);
+        prevButton.addEventListener('click', prevCard);
+
+        // Start the app
+        populateLessonButtons();
+
+    </script>
+</body>
+</html>

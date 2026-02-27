@@ -19,47 +19,26 @@
 
 <br/>
 
-<div align="center">
-
-### 🛡️ Core Infrastructure & Tooling
-*Architecting secure bare-metal clusters, hunting threats, and automating the mundane.*
+### 🚀 Some Tools I Have Used and Learned
 
 <br/>
 
-<table align="center" style="background-color: transparent; border: none;">
-  <tr style="border: none;">
-    <td align="center" width="50%" style="border: none;">
-      <b>Offensive Operations</b><br/><br/>
-      <img src="https://img.shields.io/badge/Burp_Suite-FF6633?style=for-the-badge&logo=burpsuite&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Metasploit-2196F3?style=for-the-badge&logo=metasploit&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Nmap-000000?style=for-the-badge&logo=nmap&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Nessus-2B3A42?style=for-the-badge&logo=nessus&logoColor=00B1E1" width="140" /><br/>
-    </td>
-    <td align="center" width="50%" style="border: none;">
-      <b>Defensive & SIEM</b><br/><br/>
-      <img src="https://img.shields.io/badge/Wazuh-00A9E5?style=for-the-badge&logo=wazuh&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Splunk-000000?style=for-the-badge&logo=splunk&logoColor=45B649" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Fortinet-EE3124?style=for-the-badge&logo=fortinet&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Inc_Response-272822?style=for-the-badge&logo=shield&logoColor=white" width="140" /><br/>
-    </td>
-  </tr>
-  <tr style="border: none;">
-    <td align="center" width="50%" style="border: none;">
-      <br/><b>Scripting & Automation</b><br/><br/>
-      <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/n8n-FF6D5A?style=for-the-badge&logo=n8n&logoColor=white" width="140" /><br/>
-    </td>
-    <td align="center" width="50%" style="border: none;">
-      <br/><b>Virtualization & Network</b><br/><br/>
-      <img src="https://img.shields.io/badge/Proxmox_VE-E57000?style=for-the-badge&logo=proxmox&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Tailscale-4A4A4A?style=for-the-badge&logo=tailscale&logoColor=white" width="140" /><br/>
-      <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" width="140" /><br/>
-    </td>
-  </tr>
-</table>
+<div align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=linux,ubuntu,windows,docker,python,bash,js,html,css" />
+  </a>
+</div>
 
+<div align="left" style="margin-top: 10px;">
+    <!-- Badges for specific security tools that don't have skillicons natively -->
+    <img src="https://img.shields.io/badge/Burp_Suite-FF6633?style=for-the-badge&logo=burpsuite&logoColor=white" height="35" />
+    <img src="https://img.shields.io/badge/Metasploit-2196F3?style=for-the-badge&logo=metasploit&logoColor=white" height="35" />
+    <img src="https://img.shields.io/badge/Nmap-000000?style=for-the-badge&logo=nmap&logoColor=white" height="35" />
+    <img src="https://img.shields.io/badge/Nessus-2B3A42?style=for-the-badge&logo=nessus&logoColor=00B1E1" height="35" />
+    <img src="https://img.shields.io/badge/Wazuh-00A9E5?style=for-the-badge&logo=wazuh&logoColor=white" height="35" />
+    <img src="https://img.shields.io/badge/Splunk-000000?style=for-the-badge&logo=splunk&logoColor=45B649" height="35" />
+    <img src="https://img.shields.io/badge/Proxmox_VE-E57000?style=for-the-badge&logo=proxmox&logoColor=white" height="35" />
+    <img src="https://img.shields.io/badge/Tailscale-4A4A4A?style=for-the-badge&logo=tailscale&logoColor=white" height="35" />
 </div>
 
 <br/>
@@ -108,13 +87,13 @@
 ### 🌐 Secure Communications
 
 <a href="https://sherlockk.space/">
-  <img src="https://img.shields.io/badge/Portfolio-2b3137?style=for-the-badge&logo=web&logoColor=white" width="140" alt="Portfolio" />
+  <img src="https://img.shields.io/badge/Portfolio-2b3137?style=for-the-badge&logo=web&logoColor=white" alt="Portfolio" />
 </a>
 <a href="https://linkedin.com/in/yourprofile">
-  <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" width="140" alt="LinkedIn" />
+  <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
 </a>
 <a href="mailto:sherlockk.sec@gmail.com">
-  <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" width="140" alt="Email" />
+  <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
 </a>
 
 </div>

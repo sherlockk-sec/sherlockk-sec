@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Cloud Practitioner Module 3 Study Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .module-header {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .topic-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .topic-title {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .topic-icon {
+            font-size: 1.2em;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .service-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: #6c5ce7;
+            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.3);
+        }
+        
+        .service-card h3 {
+            color: #6c5ce7;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .vpc-diagram {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .vpc-components {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .vpc-component {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: bold;
+            min-width: 140px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .vpc-component:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .route53-policies {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .routing-policy {
+            background: linear-gradient(45deg, #ff7675, #fd79a8);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .routing-policy:hover {
+            transform: scale(1.05);
+        }
+        
+        .api-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .api-type {
+            background: white;
+            border: 3px solid #6c5ce7;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 200px;
+            transition: all 0.3s ease;
+        }
+        
+        .api-type:hover {
+            background: #6c5ce7;
+            color: white;
+            transform: translateY(-5px);
+        }
+        
+        .iam-components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .iam-component {
+            background: linear-gradient(135deg, #e17055, #fab1a0);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .iam-component:hover {
+            transform: scale(1.05);
+        }
+        
+        .security-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .security-feature {
+            background: linear-gradient(45deg, #fd79a8, #fdcb6e);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .security-feature:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .exam-tip {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px dashed #fff;
+        }
+        
+        .exam-tip::before {
+            content: "💡 EXAM TIP: ";
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .key-points {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .key-points h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .key-points ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        
+        .key-points li {
+            margin: 8px 0;
+            position: relative;
+        }
+        
+        .key-points li::before {
+            content: "✓";
+            position: absolute;
+            left: -20px;
+            font-weight: bold;
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .interactive-element {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-element:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .security-services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .security-service {
+            background: white;
+            border: 3px solid #e74c3c;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .security-service:hover {
+            background: #e74c3c;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .use-cases {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .use-case {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            border: 2px solid #1565c0;
+        }
+        
+        .networking-flow {
+            background: linear-gradient(135deg, #00b894, #55a3ff);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+        
+        .flow-step {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid white;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .vpc-components {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 AWS Cloud Practitioner Module 3</h1>
+        
+        <div class="module-header">
+            <h2>Networking, Content Delivery & Security Services</h2>
+            <p>Master VPC, Route 53, API Gateway, IAM & Security! 🔒</p>
+        </div>
+
+        <!-- Amazon Route 53 -->
+        <div class="topic-section">
+            <h2 class="topic-title">
+                <span class="topic-icon">🌐</span>
+                Amazon Route 53 (DNS Service)
+            </h2>
+            
+            <div class="service-card">
+                <h3>🎯 What is Route 53?</h3>
+                <ul>
+                    <li><strong>Highly available and scalable DNS service</strong></li>
+                    <li><strong>Domain registration</strong> - Buy domain names</li>
+                    <li><strong>DNS routing</strong> - Translate domain names to IP addresses</li>
+                    <li><strong>Health checking</strong> - Monitor application health</li>
+                    <li><strong>Traffic flow management</strong> - Route users optimally</li>
+                </ul>
+            </div>
+
+            <h3>🚦 Route 53 Routing Policies</h3>
+            <div class="route53-policies">
+                <div class="routing-policy interactive-element">
+                    <h4>Simple</h4>
+                    <p>Route to single resource</p>
+                    <p>Basic DNS resolution</p>
+                </div>
+                <div class="routing-policy interactive-element">
+                    <h4>Weighted</h4>
+                    <p>Distribute traffic by %</p>
+                    <p>A/B testing, gradual rollouts</p>
+                </div>
+                <div class="routing-policy interactive-element">
+                    <h4>Failover</h4>
+                    <p>Primary → Secondary</p>
+                    <p>Disaster recovery</p>
+                </div>
+                <div class="routing-policy interactive-element">
+                    <h4>Geolocation</h4>
+                    <p>Route by user location</p>
+                    <p>Content localization</p>
+                </div>
+                <div class="routing-policy interactive-element">
+                    <h4>Latency-based</h4>
+                    <p>Route to lowest latency</p>
+                    <p>Best performance</p>
+                </div>
+                <div class="routing-policy interactive-element">
+                    <h4>Multivalue</h4>
+                    <p>Return multiple IPs</p>
+                    <p>Load balancing, redundancy</p>
+                </div>
+            </div>
+
+            <div class="exam-tip">
+                Route 53 is named after TCP/UDP port 53 used for DNS. Remember the routing policies for different use cases!
+            </div>
+        </div>
+
+        <!-- Amazon API Gateway -->
+        <div class="topic-section">
+            <h2 class="topic-title">
+                <span class="topic-icon">🔌</span>
+                Amazon API Gateway
+            </h2>
+            
+            <div class="service-grid">
+                <div class="service-card interactive-element">
+                    <h3>🌟 What is API Gateway?</h3>
+                    <ul>
+                        <li><strong>Fully managed API service</strong></li>
+                        <li><strong>Create, publish, maintain APIs</strong></li>
+                        <li><strong>RESTful and WebSocket APIs</strong></li>
+                        <li><strong>Serverless and containerized workloads</strong></li>
+                        <li><strong>Any scale, pay per API call</strong></li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>⚙️ Key Features</h3>
+                    <ul>
+                        <li><strong>Throttling & Rate limiting</strong></li>
+                        <li><strong>Authentication & Authorization</strong></li>
+                        <li><strong>Request/Response transformation</strong></li>
+                        <li><strong>Monitoring & Analytics</strong></li>
+                        <li><strong>Caching for performance</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>📡 API Types</h3>
+            <div class="api-types">
+                <div class="api-type interactive-element">
+                    <h4>REST APIs</h4>
+                    <p>REpresentational State Transfer</p>
+                    <p>Stateless, cacheable</p>
+                    <p>HTTP methods: GET, POST, PUT, DELETE</p>
+                </div>
+                <div class="api-type interactive-element">
+                    <h4>WebSocket APIs</h4>
+                    <p>Real-time two-way communication</p>
+                    <p>Chat applications, live updates</p>
+                    <p>JSON message format</p>
+                </div>
+                <div class="api-type interactive-element">
+                    <h4>HTTP APIs</h4>
+                    <p>Lower cost, faster than REST</p>
+                    <p>Basic features</p>
+                    <p>For simple use cases</p>
+                </div>
+            </div>
+
+            <div class="use-cases">
+                <div class="use-case">Mobile Backends</div>
+                <div class="use-case">Serverless Applications</div>
+                <div class="use-case">Microservices</div>
+                <div class="use-case">Real-time Apps</div>
+            </div>
+        </div>
+
+        <!-- Amazon VPC -->
+        <div class="topic-section">
+            <h2 class="topic-title">
+                <span class="topic-icon">🏠</span>
+                Amazon VPC (Virtual Private Cloud)
+            </h2>
+            
+            <div class="vpc-diagram">
+                <h3>🏗️ VPC = Your own private network in AWS</h3>
+                <p>Logically isolated section of AWS Cloud where you can launch resources</p>
+                
+                <div class="vpc-components">
+                    <div class="vpc-component interactive-element">Subnets</div>
+                    <div class="vpc-component interactive-element">Route Tables</div>
+                    <div class="vpc-component interactive-element">Internet Gateway</div>
+                    <div class="vpc-component interactive-element">NAT Gateway</div>
+                    <div class="vpc-component interactive-element">Security Groups</div>
+                    <div class="vpc-component interactive-element">NACLs</div>
+                </div>
+            </div>
+
+            <div class="service-grid">
+                <div class="service-card interactive-element">
+                    <h3>🏢 Subnets</h3>
+                    <ul>
+                        <li><strong>Range of IP addresses in VPC</strong></li>
+                        <li><strong>Public Subnet:</strong> Internet access via IGW</li>
+                        <li><strong>Private Subnet:</strong> No direct internet access</li>
+                        <li><strong>Each subnet in one AZ</strong></li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>🗺️ Route Tables</h3>
+                    <ul>
+                        <li><strong>Define where network traffic goes</strong></li>
+                        <li><strong>Every subnet must be associated</strong></li>
+                        <li><strong>Local routes + custom routes</strong></li>
+                        <li><strong>Main route table as default</strong></li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>🌐 Internet Gateway (IGW)</h3>
+                    <ul>
+                        <li><strong>Allows internet communication</strong></li>
+                        <li><strong>Horizontally scaled, highly available</strong></li>
+                        <li><strong>One IGW per VPC</strong></li>
+                        <li><strong>Required for public subnets</strong></li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>🔄 NAT Gateway</h3>
+                    <ul>
+                        <li><strong>Outbound internet for private subnets</strong></li>
+                        <li><strong>Managed by AWS</strong></li>
+                        <li><strong>Placed in public subnet</strong></li>
+                        <li><strong>High availability within AZ</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="networking-flow">
+                <h3>🔄 VPC Traffic Flow</h3>
+                <div class="flow-step">
+                    <strong>1. Public Subnet</strong> → Internet Gateway → Internet
+                </div>
+                <div class="flow-step">
+                    <strong>2. Private Subnet</strong> → NAT Gateway → Internet Gateway → Internet
+                </div>
+                <div class="flow-step">
+                    <strong>3. VPC to VPC</strong> → VPC Peering or Transit Gateway
+                </div>
+                <div class="flow-step">
+                    <strong>4. On-premises</strong> → VPN Gateway or Direct Connect
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Groups vs NACLs -->
+        <div class="topic-section">
+            <h2 class="topic-title">
+                <span class="topic-icon">🛡️</span>
+                Security Groups vs Network ACLs
+            </h2>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Security Groups</th>
+                            <th>Network ACLs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Level</strong></td>
+                            <td>Instance level (ENI)</td>
+                            <td>Subnet level</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rules</strong></td>
+                            <td>Allow rules only</td>
+                            <td>Allow & Deny rules</td>
+                        </tr>
+                        <tr>
+                            <td><strong>State</strong></td>
+                            <td>Stateful (return traffic automatic)</td>
+                            <td>Stateless (must specify both directions)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rule Processing</strong></td>
+                            <td>All rules evaluated</td>
+                            <td>Rules processed in order</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Application</strong></td>
+                            <td>Applied when launching instance</td>
+                            <td>Automatically applies to all instances</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="exam-tip">
+                Security Groups = Instance firewall (Allow only, Stateful). NACLs = Subnet firewall (Allow/Deny, Stateless). Both provide defense in depth!
+            </div>
+        </div>
+
+        <!-- AWS IAM -->
+        <div class="topic-section">
+            <h2 class="topic-title">
+                <span class="topic-icon">👥</span>
+                AWS IAM (Identity and Access Management)
+            </h2>
+            
+            <div class="service-card">
+                <h3>🔐 What is IAM?</h3>
+                <ul>
+                    <li><strong>Manage access to AWS resources securely</strong></li>
+                    <li><strong>Authentication</strong> - Who you are</li>
+                    <li><strong>Authorization</strong> - What you can do</li>
+                    <li><strong>Global service</strong> - Not region-specific</li>
+                    <li><strong>Free to use</strong> - No additional charges</li>
+                </ul>
+            </div>
+
+            <h3>🏗️ IAM Components</h3>
+            <div class="iam-components">
+                <div class="iam-component interactive-element">
+                    <h4>👤 Users</h4>
+                    <p>Individual people or applications</p>
+                    <p>Permanent credentials</p>
+                    <p>Long-term access</p>
+                </div>
+                <div class="iam-component interactive-element">
+                    <h4>👥 Groups</h4>
+                    <p>Collection of users</p>
+                    <p>Inherit permissions</p>
+                    <p>Easier management</p>
+                </div>
+                <div class="iam-component interactive-element">
+                    <h4>🎭 Roles</h4>
+                    <p>Assumable identities</p>
+                    <p>Temporary credentials</p>
+                    <p>Cross-account access</p>
+                </div>
+                <div class="iam-component interactive-element">
+                    <h4>📋 Policies</h4>
+                    <p>JSON permission documents</p>
+                    <p>Specify allowed/denied actions</p>
+                    <p>Attached to users/groups/roles</p>
+                </div>
+            </div>
+
+            <div class="security-features">
+                <div class="security-feature interactive-element">Multi-Factor Authentication</div>
+                <div class="security-feature interactive-element">Password Policies</div>
+                <div class="security-feature interactive-element">Access Keys</div>
+                <div class="security-feature interactive-element">Temporary Credentials</div>
+                <div class="security-feature interactive-element">Cross-Account Access</div>
+                <div class="security-feature interactive-element">Fine-Grained Permissions</div>
+            </div>
+
+            <div class="exam-tip">
+                IAM Best Practices: Least Privilege Principle, Use Roles for Applications, Enable MFA, Rotate Credentials Regularly, Use Groups for Users!
+            </div>
+        </div>
+
+        <!-- AWS Certificate Manager & KMS -->
+        <div class="topic-section">
+            <h2 class="topic-title">
+                <span class="topic-icon">🔒</span>
+                AWS Certificate Manager (ACM) & Key Management Service (KMS)
+            </h2>
+            
+            <div class="service-grid">
+                <div class="service-card interactive-element">
+                    <h3>📜 AWS Certificate Manager (ACM)</h3>
+                    <ul>
+                        <li><strong>Provision & manage SSL/TLS certificates</strong></li>
+                        <li><strong>Free public certificates</strong></li>
+                        <li><strong>Automatic renewal</strong></li>
+                        <li><strong>Integrates with ELB, CloudFront, API Gateway</strong></li>
+                        <li><strong>Private certificates via Private CA</strong></li>
+                    </ul>
+                    <div class="use-cases">
+                        <div class="use-case">HTTPS Websites</div>
+                        <div class="use-case">Load Balancers</div>
+                        <div class="use-case">CDN (CloudFront)</div>
+                        <div class="use-case">Internal Applications</div>
+                    </div>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>🔑 AWS Key Management Service (KMS)</h3>
+                    <ul>
+                        <li><strong>Managed encryption key service</strong></li>
+                        <li><strong>Create, manage, control encryption keys</strong></li>
+                        <li><strong>FIPS 140-2 Level 2 compliant</strong></li>
+                        <li><strong>Integrated with many AWS services</strong></li>
+                        <li><strong>Customer-managed & AWS-managed keys</strong></li>
+                    </ul>
+                    <div class="use-cases">
+                        <div class="use-case">Data Encryption</div>
+                        <div class="use-case">Digital Signing</div>
+                        <div class="use-case">Compliance</div>
+                        <div class="use-case">Key Rotation</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔐 KMS Key Types</h3>
+            <div class="security-services">
+                <div class="security-service interactive-element">
+                    <h4>AWS Managed</h4>
+                    <p>Created by AWS services</p>
+                    <p>Free to use</p>
+                    <p>Automatic rotation</p>
+                </div>
+                <div class="security-service interactive-element">
+                    <h4>Customer Managed</h4>
+                    <p>Created by customer</p>
+                    <p>Full control</p>
+                    <p>$1/month per key</p>
+                </div>
+                <div class="security-service interactive-element">
+                    <h4>AWS Owned</h4>
+                    <p>Owned by AWS</p>
+                    <p>Not visible to customers</p>
+                    <p>Used across services</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VPC Advanced Features -->
+        <div class="topic-section">
+            <h2 class="topic-title">
+                <span class="topic-icon">🔗</span>
+                VPC Advanced Features
+            </h2>
+            
+            <div class="service-grid">
+                <div class="service-card interactive-element">
+                    <h3>🤝 VPC Peering</h3>
+                    <ul>
+                        <li><strong>Connect two VPCs privately</strong></li>
+                        <li><strong>Same or different AWS accounts</strong></li>
+                        <li><strong>Same or different regions</strong></li>
+                        <li><strong>Non-transitive</strong> - must peer each VPC directly</li>
+                        <li><strong>No overlapping CIDR blocks</strong></li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>⚡ AWS Direct Connect</h3>
+                    <ul>
+                        <li><strong>Dedicated network connection</strong></li>
+                        <li><strong>On-premises to AWS</strong></li>
+                        <li><strong>Consistent bandwidth & latency</strong></li>
+                        <li><strong>Reduce network costs</strong></li>
+                        <li><strong>Private connectivity</strong></li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>🔗 VPC Endpoints</h3>
+                    <ul>
+                        <li><strong>Private connection to AWS services</strong></li>
+                        <li><strong>No internet gateway needed</strong></li>
+                        <li><strong>Gateway Endpoints:</strong> S3, DynamoDB</li>
+                        <li><strong>Interface Endpoints:</strong> Most other services</li>
+                        <li><strong>Enhanced security</strong></li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>🌐 Transit Gateway</h3>
+                    <ul>
+                        <li><strong>Central hub for multiple VPCs</strong></li>
+                        <li><strong>Simplify network architecture</strong></li>
+                        <li><strong>Connect thousands of VPCs</strong></li>
+                        <li><strong>On-premises connectivity</strong></li>
+                        <li><strong>Route table control</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="exam-tip">
+                VPC Peering is 1:1 connection. Transit Gateway is hub-and-spoke model for multiple connections. Direct Connect is for dedicated on-premises connectivity!
+            </div>
+        </div>
+
+        <!-- Key Points for Exam -->
+        <div class="key-points">
+            <h3>🎯 KEY EXAM POINTS TO REMEMBER:</h3>
+            <ul>
+                <li><strong>Route 53:</strong> DNS service with multiple routing policies (Simple, Weighted, Failover, etc.)</li>
+                <li><strong>API Gateway:</strong> Managed API service, supports REST/WebSocket/HTTP APIs</li>
+                <li><strong>VPC:</strong> Private network in AWS, contains subnets, route tables, gateways</li>
+                <li><strong>Subnets:</strong> Public (with IGW) vs Private (with NAT Gateway for outbound)</li>
+                <li><strong>Security Groups:</strong> Instance-level firewall, stateful, allow rules only</li>
+                <li><strong>NACLs:</strong> Subnet-level firewall, stateless, allow/deny rules</li>
+                <li><strong>IAM:</strong> Global service, Users/Groups/Roles/Policies, least privilege principle</li>
+                <li><strong>IAM Roles:</strong> For applications/services, temporary credentials, cross-account access</li>
+                <li><strong>ACM:</strong> Free SSL/TLS certificates, automatic renewal, integrates with AWS services</li>
+                <li><strong>KMS:</strong> Encryption key management, AWS-managed vs Customer-managed keys</li>
+                <li><strong>VPC Peering:</strong> Connect VPCs privately, non-transitive, no overlapping CIDRs</li>
+                <li><strong>Direct Connect:</strong> Dedicated connection from on-premises to AWS</li>
+                <li><strong>VPC Endpoints:</strong> Private connectivity to AWS services without internet</li>
+                <li><strong>NAT Gateway vs NAT Instance:</strong> Managed vs self-managed outbound internet</li>
+            </ul>
+        </div>
+
+        <!-- Exam Scenarios -->
+        <div class="topic-section">
+            <h2 class="topic-title">
+                <span class="topic-icon">📝</span>
+                Common Exam Scenarios
+            </h2>
+            
+            <div class="service-grid">
+                <div class="service-card interactive-element">
+                    <h3>🌐 Web Application Architecture</h3>
+                    <p><strong>Scenario:</strong> Host a web application</p>
+                    <ul>
+                        <li><strong>Route 53</strong> for DNS</li>
+                        <li><strong>Application Load Balancer</strong> in public subnets</li>
+                        <li><strong>EC2 instances</strong> in private subnets</li>
+                        <li><strong>RDS database</strong> in private subnets</li>
+                        <li><strong>NAT Gateway</strong> for outbound internet</li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>🔒 Security Requirements</h3>
+                    <p><strong>Scenario:</strong> Secure access control</p>
+                    <ul>
+                        <li><strong>IAM roles</strong> for EC2 instances</li>
+                        <li><strong>Security Groups</strong> restrict ports</li>
+                        <li><strong>KMS</strong> for data encryption</li>
+                        <li><strong>ACM</strong> for HTTPS certificates</li>
+                        <li><strong>VPC Flow Logs</strong> for monitoring</li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>🏢 Hybrid Connectivity</h3>
+                    <p><strong>Scenario:</strong> Connect to on-premises</p>
+                    <ul>
+                        <li><strong>Direct Connect</strong> for dedicated connection</li>
+                        <li><strong>VPN Gateway</strong> for encrypted tunnel</li>
+                        <li><strong>Transit Gateway</strong> for multiple connections</li>
+                        <li><strong>Route propagation</strong> for routing</li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>⚡ Serverless API</h3>
+                    <p><strong>Scenario:</strong> Build serverless API</p>
+                    <ul>
+                        <li><strong>API Gateway</strong> for REST API</li>
+                        <li><strong>Lambda functions</strong> for backend logic</li>
+                        <li><strong>DynamoDB</strong> for data storage</li>
+                        <li><strong>Cognito</strong> for authentication</li>
+                        <li><strong>CloudWatch</strong> for monitoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Reference -->
+        <div class="topic-section">
+            <h2 class="topic-title">
+                <span class="topic-icon">⚡</span>
+                Quick Reference & Mnemonics
+            </h2>
+            
+            <div class="service-grid">
+                <div class="service-card interactive-element">
+                    <h3>🧠 Memory Tricks</h3>
+                    <ul>
+                        <li><strong>"SIMPLE WAG-FIL-MUL"</strong> = Route 53 Policies (Simple, Weighted, failover, Geolocation, Failover, latency, Multivalue)</li>
+                        <li><strong>"Users Groups Roles Policies"</strong> = IAM Components</li>
+                        <li><strong>"Public = IGW, Private = NAT"</strong> = Subnet internet access</li>
+                        <li><strong>"SG = Allow only, NACL = Allow/Deny"</strong></li>
+                        <li><strong>"Stateful SG, Stateless NACL"</strong></li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>🔢 Important Numbers</h3>
+                    <ul>
+                        <li><strong>Route 53:</strong> Named after DNS port 53</li>
+                        <li><strong>CIDR /16:</strong> 65,536 IP addresses</li>
+                        <li><strong>CIDR /24:</strong> 256 IP addresses</li>
+                        <li><strong>VPC:</strong> Max 5 per region (soft limit)</li>
+                        <li><strong>Security Groups:</strong> Max 2,500 per VPC</li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>❌ Common Mistakes to Avoid</h3>
+                    <ul>
+                        <li>Confusing Security Groups with NACLs</li>
+                        <li>Thinking VPC Peering is transitive</li>
+                        <li>Forgetting NAT Gateway for private subnet outbound</li>
+                        <li>Not understanding IAM Roles vs Users</li>
+                        <li>Mixing up Route 53 routing policies</li>
+                    </ul>
+                </div>
+                <div class="service-card interactive-element">
+                    <h3>✅ Must Remember</h3>
+                    <ul>
+                        <li><strong>IAM is global</strong>, not regional</li>
+                        <li><strong>Route 53</strong> can route to AWS and non-AWS resources</li>
+                        <li><strong>Security Groups</strong> are stateful firewalls</li>
+                        <li><strong>VPC Endpoints</strong> keep traffic within AWS network</li>
+                        <li><strong>KMS</strong> keys never leave AWS unencrypted</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="exam-tip">
+            Focus on UNDERSTANDING the services and WHEN to use each one. Practice identifying which service solves which business problem. The exam tests practical application, not just definitions!
+        </div>
+
+        <!-- Final Exam Strategy -->
+        <div class="key-points">
+            <h3>🎯 FINAL EXAM STRATEGY:</h3>
+            <ul>
+                <li><strong>Read questions carefully</strong> - Look for key words like "cost-effective", "highly available", "secure"</li>
+                <li><strong>Eliminate wrong answers</strong> - Usually 2 answers are clearly wrong</li>
+                <li><strong>Think about the AWS Well-Architected Framework</strong> - Security, Reliability, Performance, Cost</li>
+                <li><strong>Remember the shared responsibility model</strong> - AWS secures the infrastructure, you secure IN the cloud</li>
+                <li><strong>When in doubt, choose the managed service</strong> - AWS prefers managed over self-managed</li>
+                <li><strong>For cost optimization</strong> - Choose reserved instances, right-sizing, lifecycle policies</li>
+                <li><strong>For security</strong> - Choose least privilege, encryption, MFA, monitoring</li>
+            </ul>
+        </div>
+
+        <div style="background: linear-gradient(45deg, #00b894, #00cec9); color: white; padding: 30px; border-radius: 15px; text-align: center; margin: 30px 0;">
+            <h2>🚀 You're Ready to Ace Your Exam!</h2>
+            <p style="font-size: 1.2em; margin-top: 15px;">Remember: AWS services are tools to solve business problems. Focus on WHEN and WHY to use each service!</p>
+            <p style="font-size: 1.1em; margin-top: 10px;">Good luck tomorrow! 🍀</p>
+        </div>
+    </div>
+
+    <script>
+        // Interactive learning elements
+        document.querySelectorAll('.interactive-element').forEach(element => {
+            element.addEventListener('click', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+                
+                // Add a visual feedback for studying
+                const originalBg = this.style.backgroundColor;
+                this.style.backgroundColor = '#4CAF50';
+                
+                setTimeout(() => {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                    this.style.backgroundColor = originalBg;
+                }, 300);
+            });
+        });
+
+        // Route 53 policies interactive learning
+        const routingPolicies = document.querySelectorAll('.routing-policy');
+        routingPolicies.forEach((policy, index) => {
+            policy.addEventListener('click', function() {
+                // Show use case scenario
+                const scenarios = [
+                    "Simple: Basic website with one server",
+                    "Weighted: 80% traffic to new version, 20% to old",
+                    "Failover: Main server down? Route to backup!",
+                    "Geolocation: EU users → EU server, US users → US server",
+                    "Latency: Route to closest region for best performance",
+                    "Multivalue: Return multiple healthy endpoints"
+                ];
+                
+                const tooltip = document.createElement('div');
+                tooltip.textContent = scenarios[index];
+                tooltip.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #2c3e50;
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    font-size: 1.1em;
+                    z-index: 1000;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                `;
+                
+                document.body.appendChild(tooltip);
+                
+                setTimeout(() => {
+                    document.body.removeChild(tooltip);
+                }, 2000);
+            });
+        });
+
+        // Study progress tracker
+        let studyProgress = {
+            clickCount: 0,
+            sectionsVisited: new Set()
+        };
+
+        document.addEventListener('click', function(e) {
+            studyProgress.clickCount++;
+            
+            const section = e.target.closest('.topic-section');
+            if (section) {
+                const title = section.querySelector('.topic-title').textContent.trim();
+                studyProgress.sectionsVisited.add(title);
+            }
+            
+            if (studyProgress.clickCount % 100 === 0) {
+                console.log(`🎓 Study Progress: ${studyProgress.clickCount} interactions, ${studyProgress.sectionsVisited.size} sections explored!`);
+            }
+        });
+
+        // Keyboard shortcuts for navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowDown') {
+                window.scrollBy(0, 300);
+                e.preventDefault();
+            } else if (e.key === 'ArrowUp') {
+                window.scrollBy(0, -300);
+                e.preventDefault();
+            }
+        });
+
+        console.log("🚀 AWS Cloud Practitioner Module 3 Study Guide Loaded!");
+        console.log("💡 Click on cards to interact and reinforce learning!");
+        console.log("⌨️ Use ↑↓ arrow keys to navigate quickly!");
+    </script>
+</body>
+</html>section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #6c5ce7;
+            transition: all 0.3s ease;
+        }
+        
+        .topic-

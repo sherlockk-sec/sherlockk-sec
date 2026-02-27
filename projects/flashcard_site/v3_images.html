@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minna no Nihongo Flashcards</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #003366;
+            margin-bottom: 20px;
+        }
+        #lesson-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        #lesson-selector button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #lesson-selector button.active {
+            background-color: #004a99;
+        }
+        #lesson-selector button:hover {
+            background-color: #0056b3;
+        }
+        #flashcard-container {
+            perspective: 1000px;
+            width: 350px;
+            height: 450px;
+        }
+        #flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 16px;
+        }
+        #flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 16px;
+            background-color: white;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        #card-image {
+            width: 90%;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            color: #555;
+            background-color: #f9f9f9;
+            border: 2px dashed #ccc;
+        }
+        #card-english {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .japanese-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+        }
+        .kanji-text {
+            font-size: 24px;
+            color: #555;
+        }
+        .romaji-text {
+            font-size: 22px;
+            font-style: italic;
+            color: #0056b3;
+        }
+        #navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 350px;
+            margin-top: 20px;
+        }
+        #navigation button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            min-width: 100px;
+        }
+        #navigation button:hover {
+            background-color: #218838;
+        }
+        #flip-button {
+            background-color: #ffc107;
+            color: #333;
+        }
+        #flip-button:hover {
+            background-color: #e0a800;
+        }
+        #card-counter {
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Minna no Nihongo Flashcards</h1>
+
+    <div id="lesson-selector">
+        </div>
+
+    <div id="flashcard-container">
+        <div id="flashcard">
+            <div class="card-face card-front">
+                <img id="card-image" src="" alt="Vocabulary image">
+                <div id="card-english">Select a lesson to begin!</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="japanese-text" id="card-japanese"></div>
+                <div class="kanji-text" id="card-kanji"></div>
+                <div class="romaji-text" id="card-romaji"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="navigation">
+        <button id="prev-button" disabled>Previous</button>
+        <button id="flip-button" disabled>Flip</button>
+        <button id="next-button" disabled>Next</button>
+    </div>
+    
+    <div id="card-counter"></div>
+
+    <script>
+        // --- DATA FROM PDF ---
+        const lessons = {
+            "Preliminary": [
+                { english: "Let's begin.", japanese: "はじめましょう", kanji: "始めましょう", romaji: "hajimemashou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Let's finish (the lesson).", japanese: "おわりましょう", kanji: "終わりましょう", romaji: "owarimashou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Let's take a break.", japanese: "やすみましょう", kanji: "休みましょう", romaji: "yasumimashou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Do you understand?", japanese: "わかりますか", kanji: "分かりますか", romaji: "wakarimasu ka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Yes, I do", japanese: "はい、わかります", kanji: "", romaji: "hai, wakarimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "No, I don't", japanese: "いいえ、わかりません", kanji: "", romaji: "iie, wakarimasen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Once more.", japanese: "もういちど", kanji: "もう一度", romaji: "mou ichido", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Fine. / Good.", japanese: "けっこうです", kanji: "結構です", romaji: "kekkou desu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "That's not OK. / That's wrong.", japanese: "だめです", kanji: "駄目です", romaji: "dame desu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "name", japanese: "なまえ", kanji: "名前", romaji: "namae", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "exam", japanese: "しけん", kanji: "試験", romaji: "shiken", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "homework", japanese: "しゅくだい", kanji: "宿題", romaji: "shukudai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "question", japanese: "しつもん", kanji: "質問", romaji: "shitsumon", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "answer", japanese: "こたえ", kanji: "答え", romaji: "kotae", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "example", japanese: "れい", kanji: "例", romaji: "rei", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Good morning.", japanese: "おはようございます", kanji: "お早うございます", romaji: "ohayou gozaimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Good afternoon.", japanese: "こんにちは", kanji: "今日は", romaji: "konnichiwa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Good evening.", japanese: "こんばんは", kanji: "今晩は", romaji: "konbanwa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Good night.", japanese: "おやすみなさい", kanji: "お休みなさい", romaji: "oyasuminasai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Goodbye-.", japanese: "さようなら", kanji: "", romaji: "sayounara", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Thank you very much", japanese: "ありがとうございます", kanji: "", romaji: "arigatou gozaimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Excuse me. / I'm sorry.", japanese: "すみません", kanji: "", romaji: "sumimasen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Please.", japanese: "おねがいします", kanji: "お願いします", romaji: "onegaishimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "0", japanese: "ゼロ、れい", kanji: "", romaji: "zero, rei", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "1", japanese: "いち", kanji: "一", romaji: "ichi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "2", japanese: "に", kanji: "二", romaji: "ni", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "3", japanese: "さん", kanji: "三", romaji: "san", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "4", japanese: "よん、し", kanji: "四", romaji: "yon, shi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "5", japanese: "ご", kanji: "五", romaji: "go", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "6", japanese: "ろく", kanji: "六", romaji: "roku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "7", japanese: "なな、しち", kanji: "七", romaji: "nana, shichi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "8", japanese: "はち", kanji: "八", romaji: "hachi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "9", japanese: "きゅう、く", kanji: "九", romaji: "kyuu, ku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "10", japanese: "じゅう", kanji: "十", romaji: "juu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 1": [
+                { english: "I", japanese: "わたし", kanji: "私", romaji: "watashi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "we", japanese: "わたしたち", kanji: "私達", romaji: "watashitachi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "you", japanese: "あなた", kanji: "貴方", romaji: "anata", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "that person, he, she", japanese: "あのひと", kanji: "あの人", romaji: "ano hito", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "that person (polite)", japanese: "あのかた", kanji: "あの方", romaji: "ano kata", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "ladies and gentlemen, all of you", japanese: "みなさん", kanji: "皆さん", romaji: "minasan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Mr., Ms.", japanese: "〜さん", kanji: "", romaji: "~san", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "child suffix", japanese: "〜ちゃん", kanji: "", romaji: "~chan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "boy suffix", japanese: "〜くん", kanji: "君", romaji: "~kun", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "nationality suffix", japanese: "〜じん", kanji: "〜人", romaji: "~jin", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "teacher, instructor (not one's own job)", japanese: "せんせい", kanji: "先生", romaji: "sensei", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "teacher, instructor (one's own job)", japanese: "きょうし", kanji: "教師", romaji: "kyoushi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "student", japanese: "がくせい", kanji: "学生", romaji: "gakusei", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "company employee", japanese: "かいしゃいん", kanji: "会社員", romaji: "kaishain", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "employee of ~ company", japanese: "しゃいん", kanji: "社員", romaji: "shain", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "bank employee", japanese: "ぎんこういん", kanji: "銀行員", romaji: "ginkouin", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "medical doctor", japanese: "いしゃ", kanji: "医者", romaji: "isha", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "researcher, scholar", japanese: "けんきゅうしゃ", kanji: "研究者", romaji: "kenkyuusha", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "engineer", japanese: "エンジニア", kanji: "", romaji: "enjinia", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "university", japanese: "だいがく", kanji: "大学", romaji: "daigaku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "hospital", japanese: "びょういん", kanji: "病院", romaji: "byouin", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "electricity, light", japanese: "でんき", kanji: "電気", romaji: "denki", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "who", japanese: "だれ", kanji: "誰", romaji: "dare", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "who (polite)", japanese: "どなた", kanji: "何方", romaji: "donata", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~ years old", japanese: "〜さい", kanji: "〜歳", romaji: "~sai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "how old", japanese: "なんさい", kanji: "何歳", romaji: "nansai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "how old (polite)", japanese: "おいくつ", kanji: "お幾つ", romaji: "oikutsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "yes", japanese: "はい", kanji: "", romaji: "hai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "no", japanese: "いいえ", kanji: "", romaji: "iie", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Excuse me, but", japanese: "しつれいですが", kanji: "失礼ですが", romaji: "shitsurei desu ga", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "May I have your name?", japanese: "おなまえは?", kanji: "お名前は?", romaji: "onamae wa?", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "How do you do?", japanese: "はじめまして。", kanji: "初めまして。", romaji: "hajimemashite.", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Pleased to meet you.", japanese: "どうぞよろしくおねがいします", kanji: "どうぞ宜しくお願いします", romaji: "douzo yoroshiku onegaishimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "This is Mr./Ms. ~.", japanese: "こちらは〜さんです。", kanji: "此方は〜さんです", romaji: "kochira wa ~san desu.", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "I came (come) from ~.", japanese: "〜からきました", kanji: "〜から来ました", romaji: "~kara kimashita", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 2": [
+                { english: "this (thing near speaker)", japanese: "これ", kanji: "", romaji: "kore", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "that (thing near listener)", japanese: "それ", kanji: "", romaji: "sore", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "that (thing far from both)", japanese: "あれ", kanji: "", romaji: "are", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "this ~", japanese: "この〜", kanji: "", romaji: "kono ~", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "that ~", japanese: "その〜", kanji: "", romaji: "sono ~", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "that ~ (over there)", japanese: "あの〜", kanji: "", romaji: "ano ~", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "book", japanese: "ほん", kanji: "本", romaji: "hon", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "dictionary", japanese: "じしょ", kanji: "辞書", romaji: "jisho", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "magazine", japanese: "ざっし", kanji: "雑誌", romaji: "zasshi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "newspaper", japanese: "しんぶん", kanji: "新聞", romaji: "shinbun", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "notebook", japanese: "ノート", kanji: "", romaji: "no-to", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "pocket notebook", japanese: "てちょう", kanji: "手帳", romaji: "techou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "business card", japanese: "めいし", kanji: "名刺", romaji: "meishi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "card", japanese: "カード", kanji: "", romaji: "ka-do", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "telephone card", japanese: "テレホンカード", kanji: "", romaji: "terehon ka-do", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "pencil", japanese: "えんぴつ", kanji: "鉛筆", romaji: "enpitsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "ballpoint pen", japanese: "ボールペン", kanji: "", romaji: "bo-rupen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "mechanical pencil", japanese: "シャープペンシル", kanji: "", romaji: "sha-pu penshiru", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "key", japanese: "かぎ", kanji: "鍵", romaji: "kagi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "watch, clock", japanese: "とけい", kanji: "時計", romaji: "tokei", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "umbrella", japanese: "かさ", kanji: "傘", romaji: "kasa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "bag, briefcase", japanese: "かばん", kanji: "鞄", romaji: "kaban", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "cassette tape", japanese: "カセットテープ", kanji: "", romaji: "kasetto te-pu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "tape recorder", japanese: "テープレコーダー", kanji: "", romaji: "te-pu reko-da-", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "television", japanese: "テレビ", kanji: "", romaji: "terebi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "radio", japanese: "ラジオ", kanji: "", romaji: "rajio", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "camera", japanese: "カメラ", kanji: "", romaji: "kamera", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "computer", japanese: "コンピューター", kanji: "", romaji: "konpyu-ta-", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "automobile, car", japanese: "じどうしゃ", kanji: "自動車", romaji: "jidousha", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "desk", japanese: "つくえ", kanji: "机", romaji: "tsukue", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "chair", japanese: "いす", kanji: "椅子", romaji: "isu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "chocolate", japanese: "チョコレート", kanji: "", romaji: "chokore-to", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "coffee", japanese: "コーヒー", kanji: "", romaji: "ko-hi-", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the English language", japanese: "えいご", kanji: "英語", romaji: "eigo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the Japanese language", japanese: "にほんご", kanji: "日本語", romaji: "nihongo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~ language", japanese: "〜ご", kanji: "〜語", romaji: "~go", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "what", japanese: "なん", kanji: "何", romaji: "nan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "so", japanese: "そう", kanji: "", romaji: "sou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "No, it isn't. / You are wrong.", japanese: "ちがいます", kanji: "違います", romaji: "chigaimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "I see. / Is that so?", japanese: "そうですか", kanji: "", romaji: "sou desu ka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "well...", japanese: "あのう", kanji: "", romaji: "anou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "It's a token of my gratitude.", japanese: "ほんのきもちです", kanji: "本の気持ちです", romaji: "hon no kimochi desu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Please. / Here you are.", japanese: "どうぞ", kanji: "", romaji: "douzo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Well, thanks.", japanese: "どうも", kanji: "", romaji: "doumo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Thank you very much.", japanese: "どうもありがとうございます", kanji: "", romaji: "doumo arigatou gozaimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 3": [
+                { english: "I hope for your kind assistance hereafter.", japanese: "これからおせわになります", kanji: "これからお世話になります", romaji: "korekara osewa ni narimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "I am pleased to meet you, too.", japanese: "こちらこそよろしく", kanji: "", romaji: "kochirakoso yoroshiku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "here, this place", japanese: "ここ", kanji: "", romaji: "koko", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "there, that place near you", japanese: "そこ", kanji: "", romaji: "soko", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "that place over there", japanese: "あそこ", kanji: "", romaji: "asoko", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "where, what place", japanese: "どこ", kanji: "", romaji: "doko", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "this way, this place (polite)", japanese: "こちら", kanji: "", romaji: "kochira", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "that way, that place (polite)", japanese: "そちら", kanji: "", romaji: "sochira", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "that way, that place over there (polite)", japanese: "あちら", kanji: "", romaji: "achira", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "which way, where (polite)", japanese: "どちら", kanji: "", romaji: "dochira", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "classroom", japanese: "きょうしつ", kanji: "教室", romaji: "kyoushitsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "dining hall, canteen", japanese: "しょくどう", kanji: "食堂", romaji: "shokudou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "office", japanese: "じむしょ", kanji: "事務所", romaji: "jimusho", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "conference room", japanese: "かいぎしつ", kanji: "会議室", romaji: "kaigishitsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "reception desk", japanese: "うけつけ", kanji: "受付", romaji: "uketsuke", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "lobby", japanese: "ロビー", kanji: "", romaji: "robi-", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "room", japanese: "へや", kanji: "部屋", romaji: "heya", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "toilet, restroom", japanese: "トイレ(おてあらい)", kanji: "(お手洗い)", romaji: "toire (otearai)", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "staircase", japanese: "かいだん", kanji: "階段", romaji: "kaidan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "elevator, lift", japanese: "エレベーター", kanji: "", romaji: "erebe-ta-", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "escalator", japanese: "エスカレーター", kanji: "", romaji: "esukare-ta-", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "country", japanese: "[お]くに", kanji: "[お]国", romaji: "[o]kuni", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "company", japanese: "かいしゃ", kanji: "会社", romaji: "kaisha", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "house, home", japanese: "うち", kanji: "家", romaji: "uchi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "telephone, telephone call", japanese: "でんわ", kanji: "電話", romaji: "denwa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "shoes", japanese: "くつ", kanji: "靴", romaji: "kutsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "necktie", japanese: "ネクタイ", kanji: "", romaji: "nekutai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "wine", japanese: "ワイン", kanji: "", romaji: "wain", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "tobacco, cigarette", japanese: "たばこ", kanji: "煙草", romaji: "tabako", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "department, counter (in store)", japanese: "うりば", kanji: "売り場", romaji: "uriba", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "basement", japanese: "ちか", kanji: "地下", romaji: "chika", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~th floor", japanese: "〜かい(~がい)", kanji: "〜階", romaji: "~kai (~gai)", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "what floor", japanese: "なんがい", kanji: "何階", romaji: "nangai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~ yen", japanese: "〜えん", kanji: "〜円", romaji: "~en", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "how much", japanese: "いくら", kanji: "幾ら", romaji: "ikura", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "hundred", japanese: "ひゃく", kanji: "百", romaji: "hyaku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "thousand", japanese: "せん", kanji: "千", romaji: "sen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "ten thousand", japanese: "まん", kanji: "万", romaji: "man", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Excuse me.", japanese: "すみません", kanji: "", romaji: "sumimasen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "polite equivalent of です", japanese: "〜でございます", kanji: "", romaji: "~de gozaimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Please show me [~].", japanese: "[~を]みせてください", kanji: "[~を]見せてください", romaji: "[~o] misete kudasai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "well, then, in that case", japanese: "じゃ", kanji: "", romaji: "ja", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Give me [~], please.", japanese: "[~を]ください", kanji: "[~を]ください", romaji: "[~o] kudasai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 4": [
+                { english: "get up, wake up", japanese: "おきます", kanji: "起きます", romaji: "okimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "sleep, go to bed", japanese: "ねます", kanji: "寝ます", romaji: "nemasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "work", japanese: "はたらきます", kanji: "働きます", romaji: "hatarakimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "take a rest, take a holiday", japanese: "やすみます", kanji: "休みます", romaji: "yasumimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "study", japanese: "べんきょうします", kanji: "勉強します", romaji: "benkyou shimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "finish", japanese: "おわります", kanji: "終わります", romaji: "owarimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "department store", japanese: "デパート", kanji: "", romaji: "depa-to", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "bank", japanese: "ぎんこう", kanji: "銀行", romaji: "ginkou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "post office", japanese: "ゆうびんきょく", kanji: "郵便局", romaji: "yuubinkyoku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "library", japanese: "としょかん", kanji: "図書館", romaji: "toshokan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "art museum", japanese: "びじゅつかん", kanji: "美術館", romaji: "bijutsukan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "now", japanese: "いま", kanji: "今", romaji: "ima", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "-o'clock", japanese: "〜じ", kanji: "〜時", romaji: "~ji", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~ minute", japanese: "〜ふん (〜ぷん)", kanji: "〜分", romaji: "~fun (~pun)", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "half", japanese: "はん", kanji: "半", romaji: "han", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "what time", japanese: "なんじ", kanji: "何時", romaji: "nanji", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "what minute", japanese: "なんぷん", kanji: "何分", romaji: "nanpun", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "a.m., morning", japanese: "ごぜん", kanji: "午前", romaji: "gozen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "p.m., afternoon", japanese: "ごご", kanji: "午後", romaji: "gogo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "morning", japanese: "あさ", kanji: "朝", romaji: "asa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "daytime, noon", japanese: "ひる", kanji: "昼", romaji: "hiru", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "night, evening", japanese: "ばん(よる)", kanji: "晩(夜)", romaji: "ban (yoru)", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the day before yesterday", japanese: "おととい", kanji: "一昨日", romaji: "ototoi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "yesterday", japanese: "きのう", kanji: "昨日", romaji: "kinou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "today", japanese: "きょう", kanji: "今日", romaji: "kyou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "tomorrow", japanese: "あした", kanji: "明日", romaji: "ashita", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the day after tomorrow", japanese: "あさって", kanji: "明後日", romaji: "asatte", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "this morning", japanese: "けさ", kanji: "今朝", romaji: "kesa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "this evening, tonight", japanese: "こんばん", kanji: "今晩", romaji: "konban", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "rest, a holiday, a day off", japanese: "やすみ", kanji: "休み", romaji: "yasumi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "lunchtime", japanese: "ひるやすみ", kanji: "昼休み", romaji: "hiruyasumi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "every morning", japanese: "まいあさ", kanji: "毎朝", romaji: "maiasa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "every evening", japanese: "まいばん", kanji: "每晚", romaji: "maiban", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "every day", japanese: "まいにち", kanji: "毎日", romaji: "mainichi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Monday", japanese: "げつようび", kanji: "月曜日", romaji: "getsuyoubi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Tuesday", japanese: "かようび", kanji: "火曜日", romaji: "kayoubi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Wednesday", japanese: "すいようび", kanji: "水曜日", romaji: "suiyoubi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Thursday", japanese: "もくようび", kanji: "木曜日", romaji: "mokuyoubi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Friday", japanese: "きんようび", kanji: "金曜日", romaji: "kinyoubi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Saturday", japanese: "どようび", kanji: "土曜日", romaji: "doyoubi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Sunday", japanese: "にちようび", kanji: "日曜日", romaji: "nichiyoubi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "what day of the week", japanese: "なんようび", kanji: "何曜日", romaji: "nanyoubi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "number", japanese: "ばんごう", kanji: "番号", romaji: "bangou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "what number", japanese: "なんばん", kanji: "何番", romaji: "nanban", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "from ~", japanese: "〜から", kanji: "", romaji: "~kara", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "up to ~, until ~", japanese: "〜まで", kanji: "", romaji: "~made", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "and (used to connect nouns)", japanese: "〜と〜", kanji: "", romaji: "~to~", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "your place", japanese: "そちら", kanji: "", romaji: "sochira", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "That's tough, isn't it?", japanese: "たいへんですね。", kanji: "大変ですね。", romaji: "taihen desu ne.", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "well, let me see", japanese: "えーと", kanji: "", romaji: "e-to", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "information, directory assistance", japanese: "104", kanji: "", romaji: "104", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Please. (ask for a favor)", japanese: "おねがいします。", kanji: "お願いします。", romaji: "onegaishimasu.", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Certainly (sir, madam).", japanese: "かしこまりました。", kanji: "", romaji: "kashikomarimashita.", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the number being inquired about", japanese: "おといあわせのばんごう", kanji: "お問い合わせの番号", romaji: "otoiawase no bangou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 5": [
+                { english: "go", japanese: "いきます", kanji: "行きます", romaji: "ikimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "come", japanese: "きます", kanji: "来ます", romaji: "kimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "go home, return", japanese: "かえります", kanji: "帰ります", romaji: "kaerimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "school", japanese: "がっこう", kanji: "学校", romaji: "gakkou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "supermarket", japanese: "スーパー", kanji: "", romaji: "su-pa-", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "station", japanese: "えき", kanji: "駅", romaji: "eki", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "airplane", japanese: "ひこうき", kanji: "飛行機", romaji: "hikouki", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "ship", japanese: "ふね", kanji: "船", romaji: "fune", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "electric train", japanese: "でんしゃ", kanji: "電車", romaji: "densha", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "subway, underground", japanese: "ちかてつ", kanji: "地下鉄", romaji: "chikatetsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the Shinkansen, bullet train", japanese: "しんかんせん", kanji: "新幹線", romaji: "shinkansen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "bus", japanese: "バス", kanji: "", romaji: "basu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "taxi", japanese: "タクシー", kanji: "", romaji: "takushi-", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "bicycle", japanese: "じてんしゃ", kanji: "自転車", romaji: "jitensha", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "on foot", japanese: "あるいて", kanji: "歩いて", romaji: "aruite", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "person, people", japanese: "ひと", kanji: "人", romaji: "hito", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "friend", japanese: "ともだち", kanji: "友達", romaji: "tomodachi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "he, boyfriend, lover", japanese: "かれ", kanji: "彼", romaji: "kare", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "she, girlfriend, lover", japanese: "かのじょ", kanji: "彼女", romaji: "kanojo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "family", japanese: "かぞく", kanji: "家族", romaji: "kazoku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "alone, by oneself", japanese: "ひとりで", kanji: "一人で", romaji: "hitori de", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "last week", japanese: "せんしゅう", kanji: "先週", romaji: "senshuu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "this week", japanese: "こんしゅう", kanji: "今週", romaji: "konshuu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "next week", japanese: "らいしゅう", kanji: "来週", romaji: "raishuu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "last month", japanese: "せんげつ", kanji: "先月", romaji: "sengetsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "this month", japanese: "こんげつ", kanji: "今月", romaji: "kongetsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "next month", japanese: "らいげつ", kanji: "来月", romaji: "raigetsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "last year", japanese: "きょねん", kanji: "去年", romaji: "kyonen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "this year", japanese: "ことし", kanji: "今年", romaji: "kotoshi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "next year", japanese: "らいねん", kanji: "来年", romaji: "rainen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~th month of the year", japanese: "〜がつ", kanji: "〜月", romaji: "~gatsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "what month", japanese: "なんがつ", kanji: "何月", romaji: "nangatsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "first day of the month", japanese: "ついたち", kanji: "一日", romaji: "tsuitachi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "second, two days", japanese: "ふつか", kanji: "二日", romaji: "futsuka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "third, three days", japanese: "みっか", kanji: "三日", romaji: "mikka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "fourth, four days", japanese: "よっか", kanji: "四日", romaji: "yokka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "fifth, five days", japanese: "いつか", kanji: "五日", romaji: "itsuka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "sixth, six days", japanese: "むいか", kanji: "六日", romaji: "muika", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "seventh, seven days", japanese: "なのか", kanji: "七日", romaji: "nanoka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "eighth, eight days", japanese: "ようか", kanji: "八日", romaji: "youka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "ninth, nine days", japanese: "ここのか", kanji: "九日", romaji: "kokonoka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "tenth, ten days", japanese: "とおか", kanji: "十日", romaji: "tooka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "fourteenth, fourteen days", japanese: "じゅうよっか", kanji: "十四日", romaji: "juuyokka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "twentieth, twenty days", japanese: "はつか", kanji: "二十日", romaji: "hatsuka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "twenty-fourth, twenty-four days", japanese: "にじゅうよっか", kanji: "二十四日", romaji: "nijuuyokka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~th day of the month, ~ days", japanese: "〜にち", kanji: "〜日", romaji: "~nichi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "which day of the month, how many days", japanese: "なんにち", kanji: "何日", romaji: "nannichi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "when", japanese: "いつ", kanji: "何時", romaji: "itsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "birthday", japanese: "たんじょうび", kanji: "誕生日", romaji: "tanjoubi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "local (train)", japanese: "ふつう", kanji: "普通", romaji: "futsuu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "rapid", japanese: "きゅうこう", kanji: "急行", romaji: "kyuukou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "express", japanese: "とっきゅう", kanji: "特急", romaji: "tokkyuu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "next", japanese: "つぎの", kanji: "次の", romaji: "tsugi no", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "You're welcome.", japanese: "どういたしまして。", kanji: "", romaji: "douitashimashite.", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "platform ~, ~th platform", japanese: "〜ばんせん", kanji: "〜番線", romaji: "~bansen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 6": [
+                { english: "eat", japanese: "たべます", kanji: "食べます", romaji: "tabemasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "drink", japanese: "のみます", kanji: "飲みます", romaji: "nomimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "smoke [a cigarette]", japanese: "すいます[たばこを~]", kanji: "吸います", romaji: "suimasu [tabako o]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "see, look at, watch", japanese: "みます", kanji: "見ます", romaji: "mimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "hear, listen", japanese: "ききます", kanji: "聞きます", romaji: "kikimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "read", japanese: "よみます", kanji: "読みます", romaji: "yomimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "write, draw, paint", japanese: "かきます", kanji: "書きます", romaji: "kakimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "buy", japanese: "かいます", kanji: "買います", romaji: "kaimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "take [a photograph]", japanese: "とります[しゃしんを~]", kanji: "撮ります", romaji: "torimasu [shashin o]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "do", japanese: "します", kanji: "", romaji: "shimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "meet [a friend]", japanese: "あいます[ともだちに~]", kanji: "会います", romaji: "aimasu [tomodachi ni]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "a meal, cooked rice", japanese: "ごはん", kanji: "ご飯", romaji: "gohan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "breakfast", japanese: "あさごはん", kanji: "朝ごはん", romaji: "asagohan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "lunch", japanese: "ひるごはん", kanji: "昼ごはん", romaji: "hirugohan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "supper", japanese: "ばんごはん", kanji: "晩ごはん", romaji: "bangohan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "bread", japanese: "パン", kanji: "", romaji: "pan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "egg", japanese: "たまご", kanji: "卵", romaji: "tamago", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "meat", japanese: "にく", kanji: "肉", romaji: "niku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "fish", japanese: "さかな", kanji: "魚", romaji: "sakana", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "vegetable", japanese: "やさい", kanji: "野菜", romaji: "yasai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "fruit", japanese: "くだもの", kanji: "果物", romaji: "kudamono", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "water", japanese: "みず", kanji: "水", romaji: "mizu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "tea, green tea", japanese: "おちゃ", kanji: "お茶", romaji: "ocha", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "black tea", japanese: "こうちゃ", kanji: "紅茶", romaji: "koucha", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "milk", japanese: "ぎゅうにゅう(ミルク)", kanji: "牛乳", romaji: "gyuunyuu (miruku)", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "juice", japanese: "ジュース", kanji: "", romaji: "juusu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "beer", japanese: "ビール", kanji: "", romaji: "biiru", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "alcohol, Japanese rice wine", japanese: "[お]さけ", kanji: "[お]酒", romaji: "[o]sake", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "video", japanese: "ビデオ", kanji: "", romaji: "bideo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "movie", japanese: "えいが", kanji: "映画", romaji: "eiga", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "CD, compact disk", japanese: "CD", kanji: "", romaji: "CD", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "letter", japanese: "てがみ", kanji: "手紙", romaji: "tegami", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "report", japanese: "レポート", kanji: "", romaji: "repooto", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "photograph", japanese: "しゃしん", kanji: "写真", romaji: "shashin", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "store, shop", japanese: "みせ", kanji: "店", romaji: "mise", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "restaurant", japanese: "レストラン", kanji: "", romaji: "resutoran", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "garden", japanese: "にわ", kanji: "庭", romaji: "niwa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "homework", japanese: "しゅくだい", kanji: "宿題", romaji: "shukudai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "tennis", japanese: "テニス", kanji: "", romaji: "tenisu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "soccer, football", japanese: "サッカー", kanji: "", romaji: "sakkaa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "cherry-blossom viewing", japanese: "[お]はなみ", kanji: "[お]花見", romaji: "[o]hanami", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "what", japanese: "なに", kanji: "何", romaji: "nani", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "together", japanese: "いっしょに", kanji: "一緒に", romaji: "issho ni", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "a little while, a little bit", japanese: "ちょっと", kanji: "一寸", romaji: "chotto", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "always, usually", japanese: "いつも", kanji: "何時も", romaji: "itsumo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "sometimes", japanese: "ときどき", kanji: "時々", romaji: "tokidoki", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "after that, and then", japanese: "それから", kanji: "", romaji: "sorekara", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "yes", japanese: "ええ", kanji: "", romaji: "ee", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "That's good.", japanese: "いいですね。", kanji: "", romaji: "ii desu ne", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "I see.", japanese: "わかりました。", kanji: "分かりました", romaji: "wakarimashita", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Yes?", japanese: "なんですか。", kanji: "何ですか", romaji: "nan desu ka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "See you [tomorrow].", japanese: "じゃ、また[あした]。", kanji: "", romaji: "ja, mata [ashita]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 7": [
+                { english: "cut, slice", japanese: "きります", kanji: "切ります", romaji: "kirimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "send", japanese: "おくります", kanji: "送ります", romaji: "okurimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "give", japanese: "あげます", kanji: "上げます", romaji: "agemasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "receive", japanese: "もらいます", kanji: "貰います", romaji: "moraimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "lend", japanese: "かします", kanji: "貸します", romaji: "kashimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "borrow", japanese: "かります", kanji: "借ります", romaji: "karimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "teach", japanese: "おしえます", kanji: "教えます", romaji: "oshiemasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "learn", japanese: "ならいます", kanji: "習います", romaji: "naraimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "make [a telephone call]", japanese: "かけます[でんわを~]", kanji: "架けます", romaji: "kakemasu [denwa o]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "hand, arm", japanese: "て", kanji: "手", romaji: "te", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "chopsticks", japanese: "はし", kanji: "箸", romaji: "hashi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "spoon", japanese: "スプーン", kanji: "", romaji: "supuun", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "knife", japanese: "ナイフ", kanji: "", romaji: "naifu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "fork", japanese: "フォーク", kanji: "", romaji: "fooku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "scissors", japanese: "はさみ", kanji: "", romaji: "hasami", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "fax", japanese: "ファクス", kanji: "", romaji: "fakusu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "word processor", japanese: "ワープロ", kanji: "", romaji: "waapuro", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "personal computer", japanese: "パソコン", kanji: "", romaji: "pasokon", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "punch", japanese: "パンチ", kanji: "", romaji: "panchi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "stapler", japanese: "ホッチキス", kanji: "", romaji: "hotchikisu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Scotch tape, clear adhesive tape", japanese: "セロテープ", kanji: "", romaji: "seroteepu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "eraser", japanese: "けしゴム", kanji: "消しゴム", romaji: "keshigomu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "paper", japanese: "かみ", kanji: "紙", romaji: "kami", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "flower, blossom", japanese: "はな", kanji: "花", romaji: "hana", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "shirt", japanese: "シャツ", kanji: "", romaji: "shatsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "present, gift", japanese: "プレゼント", kanji: "", romaji: "purezento", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "baggage, parcel", japanese: "にもつ", kanji: "荷物", romaji: "nimotsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "money", japanese: "おかね", kanji: "お金", romaji: "okane", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "ticket", japanese: "きっぷ", kanji: "切符", romaji: "kippu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Christmas", japanese: "クリスマス", kanji: "", romaji: "kurisumasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "(my) father", japanese: "ちち", kanji: "父", romaji: "chichi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "(my) mother", japanese: "はは", kanji: "母", romaji: "haha", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "(someone else's) father", japanese: "おとうさん", kanji: "お父さん", romaji: "otousan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "(someone else's) mother", japanese: "おかあさん", kanji: "お母さん", romaji: "okaasan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "already", japanese: "もう", kanji: "", romaji: "mou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "not yet", japanese: "まだ", kanji: "", romaji: "mada", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "from now on, soon", japanese: "これから", kanji: "", romaji: "korekara", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "What a nice [~]!", japanese: "[~、]すてきですね。", kanji: "", romaji: "[~,] suteki desu ne", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Excuse me./Anybody home?/May I come in?", japanese: "ごめんください。", kanji: "", romaji: "gomenkudasai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "How nice of you to come.", japanese: "いらっしゃい。", kanji: "", romaji: "irasshai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Do come in.", japanese: "どうぞおあがりください。", kanji: "", romaji: "douzo oagarikudasai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Thank you./May I?", japanese: "しつれいします。", kanji: "失礼します", romaji: "shitsureishimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Won't you have [~]?", japanese: "[~は]いかがですか。", kanji: "", romaji: "[~wa] ikaga desu ka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Thank you./I accept.", japanese: "いただきます。", kanji: "", romaji: "itadakimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "trip, tour", japanese: "りょこう", kanji: "旅行", romaji: "ryokou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "souvenir, present", japanese: "おみやげ", kanji: "お土産", romaji: "omiyage", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 8": [
+                { english: "handsome", japanese: "ハンサム[な]", kanji: "", romaji: "hansamu[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "beautiful, clean", japanese: "きれい[な]", kanji: "", romaji: "kirei[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "quiet", japanese: "しずか[な]", kanji: "静か[な]", romaji: "shizuka[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "lively", japanese: "にぎやか[な]", kanji: "賑やか[な]", romaji: "nigiyaka[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "famous", japanese: "ゆうめい[な]", kanji: "有名[な]", romaji: "yuumei[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "kind", japanese: "しんせつ[な]", kanji: "親切[な]", romaji: "shinsetsu[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "healthy, sound, cheerful", japanese: "げんき[な]", kanji: "元気[な]", romaji: "genki[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "free (time)", japanese: "ひま[な]", kanji: "暇[な]", romaji: "hima[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "convenient", japanese: "べんり[な]", kanji: "便利[な]", romaji: "benri[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "fine, nice, wonderful", japanese: "すてき[な]", kanji: "素敵[な]", romaji: "suteki[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "big, large", japanese: "おおきい", kanji: "大きい", romaji: "ookii", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "small, little", japanese: "ちいさい", kanji: "小さい", romaji: "chiisai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "new", japanese: "あたらしい", kanji: "新しい", romaji: "atarashii", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "old (not of age)", japanese: "ふるい", kanji: "古い", romaji: "furui", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "good", japanese: "いい(よい)", kanji: "", romaji: "ii (yoi)", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "bad", japanese: "わるい", kanji: "悪い", romaji: "warui", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "hot", japanese: "あつい", kanji: "厚い、熱い", romaji: "atsui", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "cold (temperature)", japanese: "さむい", kanji: "寒い", romaji: "samui", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "cold (touch)", japanese: "つめたい", kanji: "冷たい", romaji: "tsumetai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "difficult", japanese: "むずかしい", kanji: "難しい", romaji: "muzukashii", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "easy", japanese: "やさしい", kanji: "易しい", romaji: "yasashii", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "expensive, tall, high", japanese: "たかい", kanji: "高い", romaji: "takai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "inexpensive", japanese: "やすい", kanji: "安い", romaji: "yasui", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "low", japanese: "ひくい", kanji: "低い", romaji: "hikui", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "interesting", japanese: "おもしろい", kanji: "面白い", romaji: "omoshiroi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "delicious, tasty", japanese: "おいしい", kanji: "美味しい", romaji: "oishii", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "busy", japanese: "いそがしい", kanji: "忙しい", romaji: "isogashii", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "enjoyable", japanese: "たのしい", kanji: "楽しい", romaji: "tanoshii", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "white", japanese: "しろい", kanji: "白い", romaji: "shiroi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "black", japanese: "くろい", kanji: "黒い", romaji: "kuroi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "red", japanese: "あかい", kanji: "赤い", romaji: "akai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "blue", japanese: "あおい", kanji: "青い", romaji: "aoi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "cherry (blossom)", japanese: "さくら", kanji: "桜", romaji: "sakura", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "mountain", japanese: "やま", kanji: "山", romaji: "yama", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "town, city", japanese: "まち", kanji: "町", romaji: "machi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "food", japanese: "たべもの", kanji: "食べ物", romaji: "tabemono", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "car, vehicle", japanese: "くるま", kanji: "車", romaji: "kuruma", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "place", japanese: "ところ", kanji: "所", romaji: "tokoro", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "dormitory", japanese: "りょう", kanji: "寮", romaji: "ryou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "study", japanese: "べんきょう", kanji: "勉強", romaji: "benkyou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "life", japanese: "せいかつ", kanji: "生活", romaji: "seikatsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "work, business", japanese: "[お]しごと", kanji: "[お]仕事", romaji: "[o]shigoto", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "how", japanese: "どう", kanji: "", romaji: "dou", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "what kind of ~", japanese: "どんな〜", kanji: "", romaji: "donna~", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "which one", japanese: "どれ", kanji: "", romaji: "dore", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "very", japanese: "とても", kanji: "", romaji: "totemo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "not very", japanese: "あまり", kanji: "", romaji: "amari", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "and", japanese: "そして", kanji: "", romaji: "soshite", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~, but ~", japanese: "〜が、〜", kanji: "", romaji: "~ga,~", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "How are you?", japanese: "おげんきですか。", kanji: "お元気ですか。", romaji: "ogenki desu ka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Well, let me see.", japanese: "そうですね。", kanji: "", romaji: "sou desu ne", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Have you got used to the life in Japan?", japanese: "にほんのせいかつになれましたか。", kanji: "日本の生活に慣れましたか。", romaji: "nihon no seikatsu ni naremashita ka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Won't you have another cup of [~]?", japanese: "[~、]もういっぱいいかがですか。", kanji: "", romaji: "[~,] mou ippai ikaga desu ka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "No, thank you.", japanese: "いいえ、けっこうです。", kanji: "", romaji: "iie, kekkou desu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "It's already ~ [, isn't it?]", japanese: "もう〜です[ね]", kanji: "", romaji: "mou ~ desu [ne]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "It's almost time to leave now.", japanese: "そろそろしつれいします。", kanji: "そろそろ失礼します。", romaji: "sorosoro shitsureishimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Please come again.", japanese: "またいらっしゃってください。", kanji: "", romaji: "mata irasshatte kudasai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 9": [
+                { english: "understand", japanese: "わかります", kanji: "分かります", romaji: "wakarimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "have", japanese: "あります", kanji: "", romaji: "arimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "like", japanese: "すき[な]", kanji: "好き[な]", romaji: "suki[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "dislike", japanese: "きらい[な]", kanji: "嫌い[な]", romaji: "kirai[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "good at", japanese: "じょうず[な]", kanji: "上手[な]", romaji: "jouzu[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "poor at", japanese: "へた[な]", kanji: "下手[な]", romaji: "heta[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "dish (cooked food), cooking", japanese: "りょうり", kanji: "料理", romaji: "ryouri", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "drinks", japanese: "のみもの", kanji: "飲み物", romaji: "nomimono", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "sport", japanese: "スポーツ", kanji: "", romaji: "supootsu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "baseball", japanese: "やきゅう", kanji: "野球", romaji: "yakyuu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "dance", japanese: "ダンス", kanji: "", romaji: "dansu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "music", japanese: "おんがく", kanji: "音楽", romaji: "ongaku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "song", japanese: "うた", kanji: "歌", romaji: "uta", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "classical music", japanese: "クラシック", kanji: "", romaji: "kurashikku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "jazz", japanese: "ジャズ", kanji: "", romaji: "jazu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "concert", japanese: "コンサート", kanji: "", romaji: "konsaato", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "karaoke", japanese: "カラオケ", kanji: "", romaji: "karaoke", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Kabuki", japanese: "かぶき", kanji: "歌舞伎", romaji: "kabuki", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "picture, drawing", japanese: "え", kanji: "絵", romaji: "e", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "letter, character", japanese: "じ", kanji: "字", romaji: "ji", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Chinese characters", japanese: "かんじ", kanji: "漢字", romaji: "kanji", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Hiragana script", japanese: "ひらがな", kanji: "", romaji: "hiragana", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Katakana script", japanese: "かたかな", kanji: "", romaji: "katakana", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the Roman alphabet", japanese: "ローマじ", kanji: "ローマ字", romaji: "roomaji", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "small change", japanese: "こまかいおかね", kanji: "細かいお金", romaji: "komakai okane", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "ticket", japanese: "チケット", kanji: "", romaji: "chiketto", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "time", japanese: "じかん", kanji: "時間", romaji: "jikan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "something to do, errand", japanese: "ようじ", kanji: "用事", romaji: "youji", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "appointment, promise", japanese: "やくそく", kanji: "約束", romaji: "yakusoku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "(someone else's) husband", japanese: "ごしゅじん", kanji: "ご主人", romaji: "goshujin", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "(my) husband", japanese: "おっと/しゅじん", kanji: "夫/主人", romaji: "otto/shujin", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "(someone else's) wife", japanese: "おくさん", kanji: "奥さん", romaji: "okusan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "(my) wife", japanese: "つま/かない", kanji: "妻/家内", romaji: "tsuma/kanai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "child", japanese: "こども", kanji: "子ども", romaji: "kodomo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "well, much", japanese: "よく", kanji: "", romaji: "yoku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "mostly, roughly", japanese: "だいたい", kanji: "", romaji: "daitai", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "many, much", japanese: "たくさん", kanji: "", romaji: "takusan", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "a little, a few", japanese: "すこし", kanji: "少し", romaji: "sukoshi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "not at all", japanese: "ぜんぜん", kanji: "全然", romaji: "zenzen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "early, quickly, fast", japanese: "はやく", kanji: "早く、速く", romaji: "hayaku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "because ~", japanese: "〜から", kanji: "", romaji: "~kara", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "why", japanese: "どうして", kanji: "", romaji: "doushite", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "I'm sorry (to hear that).", japanese: "ざんねんです[ね]", kanji: "残念です[ね]", romaji: "zannen desu [ne]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "I am sorry.", japanese: "すみません", kanji: "", romaji: "sumimasen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "hello (used on phone)", japanese: "もしもし", kanji: "", romaji: "moshi moshi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "oh", japanese: "ああ", kanji: "", romaji: "aa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Won't you join me (us)?", japanese: "いっしょにいかがですか。", kanji: "", romaji: "issho ni ikaga desu ka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "[~] is a bit difficult.", japanese: "[~は]ちょっと...", kanji: "", romaji: "[~wa] chotto...", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "So you cannot (come)?", japanese: "だめですか。", kanji: "駄目ですか。", romaji: "dame desu ka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Please ask me again some other time.", japanese: "またこんどおねがいします。", kanji: "また今度お願いします", romaji: "mata kondo onegaishimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ],
+            "Lesson 10": [
+                { english: "exist, be (animate)", japanese: "います", kanji: "", romaji: "imasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "exist, be (inanimate)", japanese: "あります", kanji: "", romaji: "arimasu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "various", japanese: "いろいろ[な]", kanji: "色々[な]", romaji: "iroiro[na]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "man", japanese: "おとこのひと", kanji: "男の人", romaji: "otoko no hito", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "woman", japanese: "おんなのひと", kanji: "女の人", romaji: "onna no hito", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "boy", japanese: "おとこのこ", kanji: "男の子", romaji: "otoko no ko", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "girl", japanese: "おんなのこ", kanji: "女の子", romaji: "onna no ko", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "dog", japanese: "いぬ", kanji: "犬", romaji: "inu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "cat", japanese: "ねこ", kanji: "猫", romaji: "neko", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "tree", japanese: "き", kanji: "木", romaji: "ki", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "thing", japanese: "もの", kanji: "物", romaji: "mono", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "film", japanese: "フィルム", kanji: "", romaji: "firumu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "battery", japanese: "でんち", kanji: "電池", romaji: "denchi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "box", japanese: "はこ", kanji: "箱", romaji: "hako", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "switch", japanese: "スイッチ", kanji: "", romaji: "suicchi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "refrigerator", japanese: "れいぞうこ", kanji: "冷蔵庫", romaji: "reizouko", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "table", japanese: "テーブル", kanji: "", romaji: "teeburu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "bed", japanese: "ベッド", kanji: "", romaji: "beddo", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "shelf", japanese: "たな", kanji: "棚", romaji: "tana", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "door", japanese: "ドア", kanji: "", romaji: "doa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "window", japanese: "まど", kanji: "窓", romaji: "mado", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "mailbox, postbox", japanese: "ポスト", kanji: "", romaji: "posuto", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "building", japanese: "ビル", kanji: "", romaji: "biru", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "park", japanese: "こうえん", kanji: "公園", romaji: "kouen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "coffee shop", japanese: "きっさてん", kanji: "喫茶店", romaji: "kissaten", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "bookstore", japanese: "ほんや", kanji: "本屋", romaji: "hon'ya", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~ store", japanese: "〜や", kanji: "〜屋", romaji: "~ya", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "a fixed place to catch taxis, trains, etc.", japanese: "のりば", kanji: "乗り場", romaji: "noriba", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "prefecture", japanese: "けん", kanji: "県", romaji: "ken", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "on, above, over", japanese: "うえ", kanji: "上", romaji: "ue", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "under, below, beneath", japanese: "した", kanji: "下", romaji: "shita", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "front, before", japanese: "まえ", kanji: "前", romaji: "mae", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "back, behind", japanese: "うしろ", kanji: "後ろ", romaji: "ushiro", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "right [side]", japanese: "みぎ", kanji: "右", romaji: "migi", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "left [side]", japanese: "ひだり", kanji: "左", romaji: "hidari", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "in, inside", japanese: "なか", kanji: "中", romaji: "naka", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "outside", japanese: "そと", kanji: "外", romaji: "soto", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "next, next door", japanese: "となり", kanji: "隣", romaji: "tonari", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "near, vicinity", japanese: "ちかく", kanji: "近く", romaji: "chikaku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "between, among", japanese: "あいだ", kanji: "間", romaji: "aida", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "~, ~, and so on", japanese: "〜や〜[など]", kanji: "", romaji: "~ya ~[nado]", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the most ~", japanese: "いちばん〜", kanji: "一番〜", romaji: "ichiban~", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the ~th shelf", japanese: "〜だんめ", kanji: "〜段目", romaji: "~danme", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "Thank you.", japanese: "[どうも]すみません。", kanji: "", romaji: "[doumo] sumimasen", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "chilli sauce", japanese: "チリソース", kanji: "", romaji: "chiri soosu", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "the back", japanese: "おく", kanji: "奥", romaji: "oku", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" },
+                { english: "spice corner", japanese: "スパイスコーナー", kanji: "", romaji: "supaisu koonaa", imageUrl: "https://placehold.co/300x200/e0e0e0/555?text=Your+Image+Here" }
+            ]
+        };
+
+        // --- APPLICATION LOGIC ---
+        let currentDeck = [];
+        let currentIndex = 0;
+        let currentLesson = "";
+
+        // DOM Elements
+        const lessonSelector = document.getElementById('lesson-selector');
+        const flashcard = document.getElementById('flashcard');
+        const cardImage = document.getElementById('card-image');
+        const cardEnglish = document.getElementById('card-english');
+        const cardJapanese = document.getElementById('card-japanese');
+        const cardKanji = document.getElementById('card-kanji');
+        const cardRomaji = document.getElementById('card-romaji');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const flipButton = document.getElementById('flip-button');
+        const cardCounter = document.getElementById('card-counter');
+
+        // --- FUNCTIONS ---
+
+        function loadLesson(lessonName) {
+            document.querySelectorAll('#lesson-selector button').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === lessonName);
+            });
+            
+            currentLesson = lessonName;
+            currentDeck = lessons[lessonName] || [];
+            currentIndex = 0;
+            
+            flashcard.classList.remove('is-flipped');
+            
+            flipButton.disabled = currentDeck.length === 0;
+
+            if (currentDeck.length > 0) {
+                displayCard();
+            } else {
+                cardEnglish.textContent = `No cards for ${lessonName}`;
+                cardImage.src = "";
+                cardImage.alt = "No content";
+                cardCounter.textContent = "0 / 0";
+                prevButton.disabled = true;
+                nextButton.disabled = true;
+            }
+        }
+
+        function displayCard() {
+            if (currentDeck.length === 0) return;
+
+            const card = currentDeck[currentIndex];
+
+            // Front
+            cardEnglish.textContent = card.english;
+            cardImage.src = card.imageUrl;
+            cardImage.alt = card.english; 
+
+            // Back
+            cardJapanese.textContent = card.japanese;
+            cardKanji.textContent = card.kanji || ""; 
+            cardRomaji.textContent = card.romaji;
+            
+            cardCounter.textContent = `${currentIndex + 1} / ${currentDeck.length}`;
+            
+            prevButton.disabled = (currentIndex === 0);
+            nextButton.disabled = (currentIndex === currentDeck.length - 1);
+        }
+
+        function flipCard() {
+            flashcard.classList.toggle('is-flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex < currentDeck.length - 1) {
+                currentIndex++;
+                flashcard.classList.remove('is-flipped');
+                setTimeout(displayCard, 150); // A small delay for the card to flip back
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                flashcard.classList.remove('is-flipped');
+                setTimeout(displayCard, 150); // A small delay for the card to flip back
+            }
+        }
+
+        // --- INITIALIZATION ---
+        
+        function populateLessonButtons() {
+            const lessonNames = Object.keys(lessons);
+            for (const lessonName of lessonNames) {
+                const button = document.createElement('button');
+                button.textContent = lessonName;
+                button.onclick = () => loadLesson(lessonName);
+                lessonSelector.appendChild(button);
+            }
+        }
+        
+        // Event Listeners
+        flipButton.addEventListener('click', flipCard);
+        nextButton.addEventListener('click', nextCard);
+        prevButton.addEventListener('click', prevCard);
+
+        // Start the app
+        populateLessonButtons();
+
+    </script>
+</body>
+</html>
+
