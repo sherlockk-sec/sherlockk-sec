@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=800&size=40&duration=2000&color=ffffff&center=true&vCenter=true&width=600&height=60&lines=Karthikeyan+S&repeat=false" alt="Karthikeyan S" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=800&size=40&duration=2000&color=ffffff&center=true&vCenter=true&width=600&height=60&lines=Sherlockk&repeat=false" alt="Sherlockk" />
 
 <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=500&size=20&duration=2000&color=2eb67d&center=true&vCenter=true&width=600&height=40&lines=Cybersecurity+Researcher%2FEnthusiast&repeat=false" alt="Cybersecurity Researcher/Enthusiast" />
 
