@@ -15,7 +15,7 @@
 
 <br/>
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=20&duration=2000&color=00e5ff&center=false&vCenter=true&width=500&height=40&lines=Arsenal+%26+Technologies&repeat=false" alt="Arsenal & Technologies" />
+### Arsenal & Technologies
 
 <br/>
 
